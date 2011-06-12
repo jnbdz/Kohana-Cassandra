@@ -14,7 +14,7 @@ class Cassandra {
 	protected $keyspace = NULL;
 	protected $servers = array();
 	
-	public function __construct($config = FALSE)
+	public function __construct($config = FALSE, $column_family)
 	{
 		require_once Kohana::find_file('vendor', 'phpcassa/connection.php');
 		require_once Kohana::find_file('vendor', 'phpcassa/columnfamily.php');
@@ -42,6 +42,15 @@ class Cassandra {
 			$config = Kohana::config('cassandra.default');
 
 		}
+
+		$this->config = $config;
+
+		$this->servers = $this->config['servers'];
+		$this->keyspace = $this->config['keyspace'];
+
+		$this->pool = new ConnectionPool($this->keyspace, $this->servers);
+		$column_family = new ColumnFamily($pool, $column_family);
+
 	}
 
 }
