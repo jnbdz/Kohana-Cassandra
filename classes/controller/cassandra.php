@@ -49,7 +49,34 @@ class Cassandra {
 		$this->keyspace = $this->config['keyspace'];
 
 		$this->pool = new ConnectionPool($this->keyspace, $this->servers);
-		$column_family = new ColumnFamily($pool, $column_family);
+
+	}
+
+	public function selectColumnFamily($column_family_name)
+	{
+
+		$this->column_family = new ColumnFamily($this->pool, $column_family_name);
+
+	}
+
+	public function insert($row_key, $data, $timestamp = null, $ttl = null, $write_consistency_level = null)
+	{
+
+		$this->column_family->insert($row_key, $data, $timestamp, $ttl, $write_consistency_level);
+
+	}
+
+	public function batch_insert($row_key, $data, $timestamp = null, $ttl = null, $write_consistency_level = null)
+	{
+
+		$this->column_family->batch_insert($data, $timestamp, $ttl, $write_consistency_level);
+
+	}
+
+	public function batch_insert($rows, $timestamp = null, $ttl = null, $write_consistency_level = null)
+	{
+
+		$this->column_family->batch_insert($rows, $timestamp, $ttl, $write_consistency_level);
 
 	}
 
