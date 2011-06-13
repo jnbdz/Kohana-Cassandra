@@ -55,7 +55,7 @@ class Cassandra {
 	public function selectColumnFamily($column_family_name)
 	{
 
-		$this->column_family = new ColumnFamily($this->pool, $column_family_name);
+		return $this->column_family = new ColumnFamily($this->pool, $column_family_name);
 
 	}
 
@@ -73,10 +73,31 @@ class Cassandra {
 
 	}
 
-	public function batch_insert($rows, $timestamp = null, $ttl = null, $write_consistency_level = null)
+	public function get($key, $columns = null, $column_start = "", $column_finish = "", $column_reversed = False, $column_count = self::DEFAULT_COLUMN_COUNT, $super_column = null, $read_consistency_level = null)
 	{
 
-		$this->column_family->batch_insert($rows, $timestamp, $ttl, $write_consistency_level);
+		return $this->column_family->batch_insert($key, $columns, $column_start, $column_finish, $column_reversed, $column_count, $super_column, $read_consistency_level);
+
+	}
+
+	public function get_count($key, $columns = null, $column_start = '', $column_finish = '', $super_column = null, $read_consistency_level = null)
+	{
+
+		return $this->column_family->get_count($key, $columns, $column_start, $column_finish, $super_column, $read_consistency_level);
+
+	}
+
+	public function get_indexed_slices($index_clause, $columns = null, $column_start = '', $column_finish = '', $column_reversed = false, $column_count = self::DEFAULT_COLUMN_COUNT, $super_column = null, $read_consistency_level = null, $buffer_size = null)
+	{
+
+		return $this->column_family->get_indexed_slices($index_clause, $columns, $column_start, $column_finish, $column_reversed, $column_count, $super_column, $read_consistency_level, $buffer_size);
+
+	}
+
+	public function get_range()
+	{
+
+		return $this->column_family->get_range();
 
 	}
 
