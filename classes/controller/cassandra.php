@@ -5,7 +5,7 @@
 * @package        Cassandra
 * @author         Jean-Nicolas Boulay Desjardins
 * @copyright      (c) 2011 Jean-Nicolas Boulay Desjardins
-* @license        MIT
+* @license        http://www.opensource.org/licenses/isc-license.txt
 */
 
 class Cassandra {
