@@ -14,12 +14,20 @@ class Kohana_CASSANDRA {
 	protected static $keyspace = NULL;
 	protected static $servers = array();
 	public static $pool = NULL;
-	
-	public function __construct()
+
+	public function __call()
 	{
 
 		require_once ('phpcassa/connection.php');
 		require_once ('phpcassa/columnfamily.php');
+
+	}
+	
+	public function __construct()
+	{
+
+		//require_once ('phpcassa/connection.php');
+		//require_once ('phpcassa/columnfamily.php');
 
 		// Test the config group name
 		$config = Kohana::config('cassandra');
