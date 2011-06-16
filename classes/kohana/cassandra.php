@@ -15,21 +15,8 @@ class Kohana_CASSANDRA {
 	protected static $servers = array();
 	public static $pool = NULL;
 
-/*	public function __call()
-	{
-
-		require_once ('phpcassa/connection.php');
-		require_once ('phpcassa/columnfamily.php');
-
-	}
-*/	
 	public function __construct()
 	{
-
-		// require ('phpcassa/connection.php');
-		// require ('phpcassa/columnfamily.php');
-
-		spl_autoload_register('cassa');
 
 		// Test the config group name
 		$config = Kohana::config('cassandra');
@@ -45,14 +32,6 @@ class Kohana_CASSANDRA {
 	{
 
 		return new ColumnFamily(self::$pool, $column_family_name);
-
-	}
-
-	public function cassa()
-	{
-
-		require ('phpcassa/connection.php');
-                require ('phpcassa/columnfamily.php');
 
 	}
 
