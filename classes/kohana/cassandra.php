@@ -12,20 +12,10 @@ class Kohana_CASSANDRA {
 
 	public static $pool = NULL;
 
-	public function __construct()
-	{
-
-		//require_once ('phpcassa/connection.php');
-		//require_once ('phpcassa/columnfamily.php');
-
-		// Test the config group name
-
-		self::$pool = new connectcassandra();
-
-	}
-
 	public static function selectColumnFamily($column_family_name)
 	{
+
+		self::$pool = new connectcassandra();
 
 		return new ColumnFamily(self::$pool, $column_family_name);
 
