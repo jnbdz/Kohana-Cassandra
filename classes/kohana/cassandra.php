@@ -8,6 +8,9 @@
 * @license        http://www.opensource.org/licenses/isc-license.txt
 */
 
+require ('phpcassa/connection.php');
+require ('phpcassa/columnfamily.php');
+
 class Kohana_CASSANDRA {
 
 	protected static $config = array();
