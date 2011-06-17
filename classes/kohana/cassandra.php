@@ -12,10 +12,15 @@ class Kohana_CASSANDRA {
 
 	public static $pool = NULL;
 
-	public function selectColumnFamily($column_family_name)
+	public function __construct()
 	{
 
 		self::$pool = new connectcassandra();
+
+	}
+
+	public function selectColumnFamily($column_family_name)
+	{
 
 		return new ColumnFamily(self::$pool, $column_family_name);
 
