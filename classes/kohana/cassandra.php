@@ -21,7 +21,7 @@ class Kohana_CASSANDRA {
 	public function __construct()
 	{
 
-require ('phpcassa/connection.php');
+require_once ('phpcassa/connection.php');
 
 		// Test the config group name
 		$config = Kohana::config('cassandra');
@@ -36,7 +36,7 @@ require ('phpcassa/connection.php');
 	public static function selectColumnFamily($column_family_name)
 	{
 
-require ('phpcassa/columnfamily.php');
+require_once ('phpcassa/columnfamily.php');
 
 		return new ColumnFamily(self::$pool, $column_family_name);
 
