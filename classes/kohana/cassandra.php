@@ -13,10 +13,10 @@
 
 class Kohana_CASSANDRA {
 
-	protected $config = array();
-	protected $keyspace = NULL;
-	protected $servers = array();
-	public $pool = NULL;
+	protected static $config = array();
+	protected static $keyspace = NULL;
+	protected static $servers = array();
+	public static $pool = NULL;
 
 	public function __construct()
 	{
@@ -27,17 +27,17 @@ class Kohana_CASSANDRA {
 		// Test the config group name
 		$config = Kohana::config('cassandra');
 
-		$this->servers = $config['servers'];
-		$this->keyspace = $config['keyspace'];
+		self::$servers = $config['servers'];
+		self::$keyspace = $config['keyspace'];
 
-		$this->pool = new ConnectionPool($this->keyspace, $this->servers);
+		self::$pool = new ConnectionPool(self::$keyspace, self::$servers);
 
 	}
 
-	public function selectColumnFamily($column_family_name)
+	public static function selectColumnFamily($column_family_name)
 	{
 
-		return new ColumnFamily($this->pool, $column_family_name);
+		return new ColumnFamily(self::$pool, $column_family_name);
 
 	}
 
