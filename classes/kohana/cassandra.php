@@ -8,8 +8,8 @@
 * @license        http://www.opensource.org/licenses/isc-license.txt
 */
 
-require ('phpcassa/connection.php');
-require ('phpcassa/columnfamily.php');
+#require ('phpcassa/connection.php');
+#require ('phpcassa/columnfamily.php');
 
 class Kohana_CASSANDRA {
 
@@ -20,6 +20,8 @@ class Kohana_CASSANDRA {
 
 	public function __construct()
 	{
+
+require ('phpcassa/connection.php');
 
 		// Test the config group name
 		$config = Kohana::config('cassandra');
@@ -33,6 +35,8 @@ class Kohana_CASSANDRA {
 
 	public static function selectColumnFamily($column_family_name)
 	{
+
+require ('phpcassa/columnfamily.php');
 
 		return new ColumnFamily(self::$pool, $column_family_name);
 
