@@ -10,4 +10,11 @@ class Kohana_Loadphpcassa {
 
 	}
 
+	public function ColumnFamily($pool, $col_fam)
+	{
+
+		return new ColumnFamily($pool, $cal_fam);
+
+	}
+
 }
