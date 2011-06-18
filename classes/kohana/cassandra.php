@@ -15,22 +15,23 @@ class Kohana_CASSANDRA {
 	public function __construct()
 	{
 
-		self::$pool = new connectcassandra();
+		require_once ('phpcassa/connection.php');
+                require_once ('phpcassa/columnfamily.php');
+
+                $config = Kohana::config('cassandra');
+
+                $servers = $config['servers'];
+                $keyspace = $config['keyspace'];
+
+                self::$pool = new ConnectionPool($keyspace, $servers);
 
 	}
 
-	public function colfam($pool, $column_family_name)
+	public static function connection()
 	{
 
-		return new ColumnFamily($pool, $column_family_name);
+		return self::$pool;
 
-	}
-
-	public static function selectColumnFamily($column_family_name)
-	{
-
-		return self::colfam(self::$pool, $column_family_name);
-
-	}
+	} 
 
 } // End of Cassandra

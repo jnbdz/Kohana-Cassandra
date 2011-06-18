@@ -1,6 +1,6 @@
 <?php
 
-class connectcassandra {
+class Kohana_Connectcassandra {
 
 	public function __construct()
 	{
