@@ -5,8 +5,8 @@ class Kohana_Loadphpcassa {
 	public function __construct()
 	{
 
-		require ('phpcassa/connection.php');
-                require ('phpcassa/columnfamily.php');
+		require_once ('phpcassa/connection.php');
+                require_once ('phpcassa/columnfamily.php');
 
 	}
 
