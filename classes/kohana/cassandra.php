@@ -15,8 +15,7 @@ class Kohana_CASSANDRA {
 	public function __construct()
 	{
 
-		require ('phpcassa/connection.php');
-                require ('phpcassa/columnfamily.php');
+		new loadphpcassa();
 
                 $config = Kohana::config('cassandra');
 
