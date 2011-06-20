@@ -27,7 +27,7 @@ class Kohana_CASSANDRA {
 
 	}
 
-	public static selectColumnFamily($col_fam)
+	public static function selectColumnFamily($col_fam)
 	{
 
 		return new ColumnFamily($col_fam);
