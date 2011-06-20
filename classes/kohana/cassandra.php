@@ -12,7 +12,7 @@ class Kohana_CASSANDRA {
 
 	public static $pool = NULL;
 
-	public function init()
+	public static function init()
 	{
 
                 require_once ('phpcassa/connection.php');
