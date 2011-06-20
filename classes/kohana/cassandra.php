@@ -30,6 +30,8 @@ class Kohana_CASSANDRA {
 	public static function selectColumnFamily($col_fam)
 	{
 
+		self::init();
+
 		return new ColumnFamily(self::$pool, $col_fam);
 
 	}
