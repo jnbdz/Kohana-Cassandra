@@ -15,6 +15,8 @@ class Kohana_CASSANDRA {
 	public static function init()
 	{
 
+echo '~Hey!~';
+
                 require_once ('phpcassa/connection.php');
                 require_once ('phpcassa/columnfamily.php');
 
