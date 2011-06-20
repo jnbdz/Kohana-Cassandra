@@ -23,14 +23,14 @@ class Kohana_CASSANDRA {
                 $servers = $config['servers'];
                 $keyspace = $config['keyspace'];
 	
-		return new ConnectionPool($keyspace, $servers);
+		self::$pool = new ConnectionPool($keyspace, $servers);
 
 	}
 
 	public static function selectColumnFamily($col_fam)
 	{
 
-		return new ColumnFamily($col_fam);
+		return new ColumnFamily(self:$pool, $col_fam);
 
 	}
 
