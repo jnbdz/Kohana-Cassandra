@@ -12,25 +12,26 @@ class Kohana_CASSANDRA {
 
 	public static $pool = NULL;
 
-	public function __construct()
+	public function init()
 	{
 
-		new loadphpcassa();
+                require_once ('phpcassa/connection.php');
+                require_once ('phpcassa/columnfamily.php');
 
                 $config = Kohana::config('cassandra');
 
                 $servers = $config['servers'];
                 $keyspace = $config['keyspace'];
-
-                self::$pool = new ConnectionPool($keyspace, $servers);
+	
+		return new ConnectionPool($keyspace, $servers);
 
 	}
 
-	public static function connection()
+	public static selectColumnFamily($col_fam)
 	{
 
-		return self::$pool;
+		return new ColumnFamily($col_fam);
 
-	} 
+	}
 
 } // End of Cassandra
