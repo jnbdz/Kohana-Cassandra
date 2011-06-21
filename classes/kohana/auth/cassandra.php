@@ -32,4 +32,36 @@ class Kohana_Auth_Cassandra extends Auth {
 			if (is_array($role))
 			{
 				// Get all the roles
-				
+				$columnFamily = CASSANDRA::selectColumnFamily('Users');
+				$roles = $columnFamily->get('roles');
+
+				if (count($roles) !== count($role))
+					return FALSE;
+
+			}
+			else
+			{
+				if ( ! is_object($role))
+				{
+					// Load the role
+					$roles = ORM::factory('role', array('name' => $role));
+
+					if ( ! $roles->loaded())
+						return FALSE;
+				}
+			}
+
+			return $user->has('roles', $roles);
+
+		}
+	}
+
+	/**
+	 * Logs a user in.
+	 *
+	 * @param   string   username
+	 * @param   string   password
+	 * @param   boolean  enable autologin
+	 * @return  boolean
+	 */
+	protected function _login($user, $password, $remember)
