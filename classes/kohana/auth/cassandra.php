@@ -64,4 +64,5 @@ class Kohana_Auth_Cassandra extends Auth {
 	 * @param   boolean  enable autologin
 	 * @return  boolean
 	 */
-	protected function _login($user, $password, $remember)
+//	protected function _login($user, $password, $remember)
+}
