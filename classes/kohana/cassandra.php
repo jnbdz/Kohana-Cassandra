@@ -49,10 +49,10 @@ class Kohana_CASSANDRA {
 		foreach($indexes as $col => $val)
 		{
 
-			echo $index = array_push($index, CassandraUtil::create_index_expression($col, $val));
+			array_push($index, CassandraUtil::create_index_expression($col, $val));
 
 		}
-var_dump($index);
+
 		$index_clause = CassandraUtil::create_index_clause($index);
 
 		return self::$ColumnFamily->get_indexed_slices($index_clause);
