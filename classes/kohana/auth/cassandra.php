@@ -24,13 +24,12 @@ class Kohana_Auth_Cassandra extends Auth {
 			return FALSE;
 
 		// Get all the roles
-		$columnFamily = CASSANDRA::selectColumnFamily('Users');
-		$userData = $columnFamily->get($username);
+		$userData = CASSANDRA::selectColumnFamily('Users')->get($username);
 
-		if (!$userData['role'])
+		if (!$role)
 			return FALSE;
 
-		return $userData['role'];
+		return is_array($userData);
 
 	}
 
@@ -45,13 +44,9 @@ class Kohana_Auth_Cassandra extends Auth {
 	protected function _login($user, $password, $remember)
 	{
 
-		if ( ! is_object($user))
-		{
-			$username = $user;
-
-			// Load the user
-			$user = CASSANDRA::selectColumnFamily('Users')->get($username);
-		}
+		$username = $user;
+		// Load the user
+		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
 
 		// If the passwords match, perform a login
 		if ($user['password'] === $password)
@@ -59,16 +54,19 @@ class Kohana_Auth_Cassandra extends Auth {
 			if ($remember === TRUE)
 			{
 				// Token data
+				$token = sha1(uniqid(Text::random('alnum', 32), TRUE));
 				$data = array(
+					'token'	     => $token,
+					'created'    => time(),
 					'expires'    => time() + $this->_config['lifetime'],
 					'user_agent' => sha1(Request::$user_agent),
 				);
 
 				// Create a new autologin token
-				$token = CASSANDRA::selectColumnFamily('UsersTokens')->insert($username, $data);
+				CASSANDRA::selectColumnFamily('UsersTokens')->insert($username, $data);
 
 				// Set the autologin cookie
-				Cookie::set('authautologin', $token->token, $this->_config['lifetime']);
+				Cookie::set('authautologin', $token, $this->_config['lifetime']);
 			}
 
 			// Finish the login
@@ -91,13 +89,10 @@ class Kohana_Auth_Cassandra extends Auth {
 	public function force_login($user, $mark_session_as_forced = FALSE)
 	{
 
-		if ( ! is_object($user))
-		{
-			$username = $user;
+		$username = $user;
 
-			// Load the user
-			$user = CASSANDRA::selectColumnFamily('Users')->get($username);
-		}
+		// Load the user
+		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
 
 		if ($mark_session_as_forced === TRUE)
 		{
@@ -120,18 +115,29 @@ class Kohana_Auth_Cassandra extends Auth {
 	{
 		if ($token = Cookie::get('authautologin'))
 		{
-			// Load the token and user
-			$token = CASSANDRA::selectColumnFamily('UsersTokens')->get($username, array('token' => $token)) 
+			// Load the token and user ------------> NEED TO INDEX!!!
+			$token = CASSANDRA::selectColumnFamily('UsersTokens')->get($username, array('token' => $token));
+
+			
 
 			if (is_array($token))
 			{
 				if ($token['user_agent'] === sha1(Request::$user_agent))
 				{
+
+					$token = sha1(uniqid(Text::random('alnum', 32), TRUE));
+					$data = array(
+						'token'      => $token,
+						'created'    => time(),
+						'expires'    => time() + $this->_config['lifetime'],
+						'user_agent' => sha1(Request::$user_agent),
+					);
+
 					// Save the token to create a new unique token
-					CASSANDRA::selectColumnFamily('UsersTokens')->insert();
+					CASSANDRA::selectColumnFamily('UsersTokens')->insert($username, $data);
 
 					// Set the new token
-					Cookie::set('authautologin', $token->token, $token->expires - time());
+					Cookie::set('authautologin', $data['token'], $data['expires'] - time());
 
 					// Complete the login with the found data
 					$user = CASSANDRA::selectColumnFamily('Users')->get($username);
@@ -142,7 +148,7 @@ class Kohana_Auth_Cassandra extends Auth {
 				}
 
 				// Token is invalid
-				CASSANDRA::selectColumnFamily('UsersTokens')->insert();
+				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
 			}
 		}
 
