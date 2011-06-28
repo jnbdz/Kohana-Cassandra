@@ -48,7 +48,8 @@ class Kohana_CASSANDRA {
 
 		foreach($indexes as $col => $val)
 		{
-
+echo $col;
+echo $val;
 			$index = array_push($index, CassandraUtil::create_index_expression($col, $val));
 
 		}
