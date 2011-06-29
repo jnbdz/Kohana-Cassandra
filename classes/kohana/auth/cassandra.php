@@ -116,9 +116,9 @@ class Kohana_Auth_Cassandra extends Auth {
 		if ($token = Cookie::get('authautologin'))
 		{
 			// Load the token and user ------------> NEED TO INDEX!!!
-			$token = CASSANDRA::selectColumnFamily('UsersTokens')->get($username, array('token' => $token));
-
-			
+			CASSANDRA::selectColumnFamily('UsersTokens');
+			$rows = CASSANDRA::getIndexedSlices(array('token' => $token));
+			foreach($rows as $username => $token){}
 
 			if (is_array($token))
 			{
@@ -193,15 +193,17 @@ class Kohana_Auth_Cassandra extends Auth {
                         Cookie::delete('authautologin');
 
                         // Clear the autologin token from the database
-                        $token = ORM::factory('user_token', array('token' => $token));
+			CASSANDRA::selectColumnFamily('UsersTokens');
+			$rows = CASSANDRA::getIndexedSlices(array('token' => $token));
+			foreach($rows as $username => $token){}
 
-                        if ($token->loaded() AND $logout_all)
+                        if (is_array($token) AND $logout_all)
                         {
-                                ORM::factory('user_token')->where('user_id', '=', $token->user_id)->delete_all();
+				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
                         }
-                        elseif ($token->loaded())
+                        elseif (is_array($token))
                         {
-                                $token->delete();
+				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
                         }
                 }
 
@@ -214,18 +216,12 @@ class Kohana_Auth_Cassandra extends Auth {
          * @param   mixed   username string, or user ORM object
          * @return  string
 	*/
-        public function password($user)
+        public function password($username)
         {
-                if ( ! is_object($user))
-                {
-                        $username = $user;
+		// Load the user
+		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
 
-                        // Load the user
-                        $user = ORM::factory('user');
-                        $user->where($user->unique_key($username), '=', $username)->find();
-                }
-
-                return $user->password;
+		return $user['password'];
         }
 
         /**
