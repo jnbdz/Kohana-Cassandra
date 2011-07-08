@@ -176,6 +176,7 @@ class Model_Auth_User {
 	public static function create_user($fields, $username)
 	{
 		$this->Validate($fields);
+		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
 		return CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
 	}
 
