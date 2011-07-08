@@ -116,7 +116,7 @@ class Kohana_Auth_Cassandra extends Auth {
 		if ($token = Cookie::get('authautologin'))
 		{
 			// Load the token and user ------------> NEED TO INDEX!!!
-			CASSANDRA::selectColumnFamily('UsersTokens');
+			$usersTokens = CASSANDRA::selectColumnFamily('UsersTokens');
 			$rows = CASSANDRA::getIndexedSlices(array('token' => $token));
 			foreach($rows as $username => $token){}
 
@@ -134,7 +134,7 @@ class Kohana_Auth_Cassandra extends Auth {
 					);
 
 					// Save the token to create a new unique token
-					CASSANDRA::selectColumnFamily('UsersTokens')->insert($username, $data);
+					$usersTokens->insert($username, $data);
 
 					// Set the new token
 					Cookie::set('authautologin', $data['token'], $data['expires'] - time());
@@ -148,7 +148,7 @@ class Kohana_Auth_Cassandra extends Auth {
 				}
 
 				// Token is invalid
-				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
+				$usersTokens->remove($username);
 			}
 		}
 
@@ -193,17 +193,17 @@ class Kohana_Auth_Cassandra extends Auth {
                         Cookie::delete('authautologin');
 
                         // Clear the autologin token from the database
-			CASSANDRA::selectColumnFamily('UsersTokens');
+			$usersTokens = CASSANDRA::selectColumnFamily('UsersTokens');
 			$rows = CASSANDRA::getIndexedSlices(array('token' => $token));
 			foreach($rows as $username => $token){}
 
                         if (is_array($token) AND $logout_all)
                         {
-				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
+				$usersTokens->remove($username);
                         }
                         elseif (is_array($token))
                         {
-				CASSANDRA::selectColumnFamily('UsersTokens')->remove($username);
+				$usersTokens->remove($username);
                         }
                 }
 
