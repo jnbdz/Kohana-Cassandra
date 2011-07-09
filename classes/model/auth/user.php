@@ -159,7 +159,7 @@ class Model_Auth_User {
 	 * @param array $values
 	 * @return Validation
 	 */
-	public function Validate($values)
+	public static function Validate($values)
 	{
 		return Validation::factory($values)
 			->rules(Model_User::rules())
@@ -175,7 +175,7 @@ class Model_Auth_User {
 	 */
 	public static function create_user($fields, $username)
 	{
-		$this->Validate($fields);
+		self::Validate($fields);
 		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
 		return CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
 	}
