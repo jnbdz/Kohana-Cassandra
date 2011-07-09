@@ -27,7 +27,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Rules
 	 */
-	public static function rules()
+	public function rules()
 	{
 		return array(
 			'username' => array(
@@ -60,7 +60,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Filters
 	 */
-	public static function filters()
+	public function filters()
 	{
 		return array(
 			'password' => array(
@@ -159,7 +159,7 @@ class Model_Auth_User {
 	 * @param array $values
 	 * @return Validation
 	 */
-	public static function Validate($values)
+	public function validate($values)
 	{
 		return Validation::factory($values)
 			->rules(self::rules())
@@ -175,7 +175,7 @@ class Model_Auth_User {
 	 */
 	public static function create_user($fields, $username)
 	{
-		self::Validate($fields);
+		$this->validate($fields);
 		die('Its here!');
 		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
 		return CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
@@ -188,14 +188,14 @@ class Model_Auth_User {
 	 * @param string $username
 	 * @return the timestamp for the operation
 	 */
-	public static function update_user($fields, $username)
+	public function update_user($fields, $username)
 	{
 		if (empty($fields['password']))
 		{
 			// Send Error!
 		}
 
-		$this->Validate($fields);
+		$this->validate($fields);
 		$users = CASSANDRA::selectColumnFamily('Users');
 		if ($users->get_cout($username))
 		{
