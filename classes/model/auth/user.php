@@ -162,8 +162,8 @@ class Model_Auth_User {
 	public function validate($values)
 	{
 		return Validation::factory($values)
-			->rules(self::rules())
-			->filters(self::filters());
+			->rules($this->rules())
+			->filters($this->filters());
 	}
 
 	/**
