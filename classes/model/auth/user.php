@@ -173,7 +173,7 @@ class Model_Auth_User {
 	 * @param string $username
 	 * @return the timestamp for the operation
 	 */
-	public static function create_user($fields, $username)
+	public function create_user($fields, $username)
 	{
 		$this->validate($fields);
 		die('Its here!');
