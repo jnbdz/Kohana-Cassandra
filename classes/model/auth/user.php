@@ -159,7 +159,7 @@ class Model_Auth_User {
 	 * @param array $values
 	 * @return Validation
 	 */
-	public static function Validate($values)
+	public function Validate($values)
 	{
 		return Validation::factory($values)
 			->rules(Model_User::rules())
