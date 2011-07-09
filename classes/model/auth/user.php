@@ -27,7 +27,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Rules
 	 */
-	public function rules()
+	public static function rules()
 	{
 		return array(
 			'username' => array(
@@ -60,7 +60,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Filters
 	 */
-	public function filters()
+	public static function filters()
 	{
 		return array(
 			'password' => array(
