@@ -27,32 +27,28 @@ class Model_Auth_User {
 	 *
 	 * @return array Rules
 	 */
-	public function rules()
-	{
-		return array(
-			'username' => array(
-				array('not_empty'),
-				array('min_length', array(':value', 4)),
-				array('max_length', array(':value', 32)),
-				array('regex', array(':value', '/^[-\pL\pN_.]++$/uD')),
-				array(array($this, 'username_available'), array(':validation', ':field')),
-			),
-			'password' => array(
-				array('not_empty'),
-				array('min_length', array(':value', 8)),
-			),
-			'password_confirm' => array(
-				array('matches', array(':validation', ':field', 'password')),
-			),
-			'email' => array(
-				array('not_empty'),
-				array('min_length', array(':value', 4)),
-				array('max_length', array(':value', 127)),
-				array('email'),
-				array(array($this, 'email_available'), array(':validation', ':field')),
-			),
-		);
-	}
+	protected $_rules = array(
+		'username' => array(
+			'not_empty' => NULL,
+			'min_length' => array(4),
+			'max_length' => array(32),
+			'regex' => array('/^[-\pL\pN_.]++$/uD'),	
+		),
+		'password' => array(
+			'not_empty' => NULL,
+			'min_length' => array(8),
+			'max_length' => array(42),
+		),
+		'password_confirm' => array(
+			'matches' => array('password'),
+		),
+		'email' => array(
+			'not_empty' => NULL,
+			'min_length' => array(4),
+			'max_length' => array(127),
+			'validate::email' => NULL,
+		),
+	);
 
 	/**
 	 * Filters to run when data is set in this model. The password filter
@@ -60,14 +56,11 @@ class Model_Auth_User {
 	 *
 	 * @return array Filters
 	 */
-	public function filters()
-	{
-		return array(
-			'password' => array(
-				array(array(Auth::instance(), 'hash'))
-			)
-		);
-	}
+	protected $_filters = array(
+		'password' => array(
+			array(array(Auth::instance(), 'hash'))
+		)
+	);
 
 	/**
 	 * Labels for fields in this model
@@ -125,10 +118,7 @@ class Model_Auth_User {
 	 */
 	public function email_available(Validation $validation, $field)
 	{
-		if (!Valid::email($validation[$field]))
-		{
-			$validation->error($field, 'email', array($validation[$field]));
-		} elseif ($this->unique_key_exists('email', $validation[$field]))
+		if ($this->unique_key_exists('email', $validation[$field]))
 		{
 			$validation->error($field, 'email_available', array($validation[$field]));
 		}
@@ -154,19 +144,6 @@ class Model_Auth_User {
 	}
 
 	/**
-	 * Validate method validates the form for subscription
-	 *
-	 * @param array $values
-	 * @return Validation
-	 */
-	public function validate($values)
-	{
-		return Validation::factory($values)
-			->rules($this->rules())
-			->filters($this->filters());
-	}
-
-	/**
 	 * Adds or updates the Users ColumnFamily
 	 *
 	 * @param array $fields
@@ -175,10 +152,18 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields, $username)
 	{
-		$this->validate($fields);
-		die('Its here!');
+		Validation::factory($fields)
+			->rules('username', $this->_rules['username'])
+			->rule('username', 'username_available', array($this, ':field'))
+			->rules('email', $this->_rules['email'])
+			->rule('email', 'email_available', array($this, ':field'))
+			->rules('password', $this->_rules['password'])
+			->rules('password_confirm', $this->_rules['password_confirm'])
+			->filters('password', $this->_filters['password']);
+die('Validated!');
 		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
-		return CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
+		CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
+		return TRUE;
 	}
 
 	/**
@@ -190,10 +175,10 @@ class Model_Auth_User {
 	 */
 	public function update_user($fields, $username)
 	{
-		if (empty($fields['password']))
-		{
-			// Send Error!
-		}
+		Validation::factory($fields)
+			->rules('password', $this->_rules['password'])
+			->rules('password_confirm', $this->_rules['password_confirm'])
+			->filters('password', $this->_filters['password']);
 
 		$this->validate($fields);
 		$users = CASSANDRA::selectColumnFamily('Users');
