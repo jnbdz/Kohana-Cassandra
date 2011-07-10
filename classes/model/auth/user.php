@@ -158,11 +158,10 @@ class Model_Auth_User {
 			->rules('email', $this->_rules['email'])
 			->rule('email', 'email_available', array($this, ':field'))
 			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm'])
-			->rule('password', 'hash', array('Auth::instance', ':value'));
-die(Auth::instance()->hash($fields['password']));
+			->rules('password_confirm', $this->_rules['password_confirm']);
+
 		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
-		CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => $fields['password']));
+		CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => Auth::instance()->hash($fields['password'])));
 		return TRUE;
 	}
 
