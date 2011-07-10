@@ -58,7 +58,7 @@ class Model_Auth_User {
 	 */
 	protected $_filters = array(
 		'password' => array(
-			array(array(Auth::instance(), 'hash'))
+			'Auth::instance' => 'hash'
 		)
 	);
 
