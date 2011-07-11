@@ -43,6 +43,7 @@ class Kohana_Auth_Cassandra extends Auth {
 	 */
 	protected function _login($user, $password, $remember)
 	{
+var_dump($user);
 die(var_dump($user . ' - ' . $password));
 		$username = $user;
 		// Load the user
