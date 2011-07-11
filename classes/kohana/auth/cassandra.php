@@ -43,11 +43,14 @@ class Kohana_Auth_Cassandra extends Auth {
 	 */
 	protected function _login($user, $password, $remember)
 	{
-var_dump($user);
-die(var_dump($user . ' - ' . $password));
-		$username = $user;
-		// Load the user
-		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
+
+		$username = $user['username'];
+
+		if ( ! is_object($user))
+		{die('Not object!');
+			// Load the user
+			$user = CASSANDRA::selectColumnFamily('Users')->get($username);
+		}
 
 		// If the passwords match, perform a login
 		if ($user['password'] === $password)
