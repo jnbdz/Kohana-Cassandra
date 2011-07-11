@@ -44,17 +44,20 @@ class Kohana_Auth_Cassandra extends Auth {
 	protected function _login($user, $password, $remember)
 	{
 
-		$username = $user['username'];
-
-		if ( ! is_object($user))
-		{die('Not object!');
+		if ( ! is_array($user))
+		{
+			$username = $user;
 			// Load the user
 			$user = CASSANDRA::selectColumnFamily('Users')->get($username);
+		} else
+		{
+			$username = $user['username'];
 		}
 
 		// If the passwords match, perform a login
 		if ($user['password'] === $password)
 		{
+die('Password is good!');
 			if ($remember === TRUE)
 			{
 				// Token data
@@ -78,7 +81,7 @@ class Kohana_Auth_Cassandra extends Auth {
 
 			return TRUE;
 		}
-
+die('Password is bad!');
 		// Login failed
 		return FALSE;
 	}
