@@ -43,7 +43,7 @@ class Kohana_Auth_Cassandra extends Auth {
 	 */
 	protected function _login($user, $password, $remember)
 	{
-
+die(var_dump($user . ' - ' . $password));
 		$username = $user;
 		// Load the user
 		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
