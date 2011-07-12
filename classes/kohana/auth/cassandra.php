@@ -24,12 +24,12 @@ class Kohana_Auth_Cassandra extends Auth {
 			return FALSE;
 
 		// Get all the roles
-		$userRoles = CASSANDRA::selectColumnFamily('UsersRoles')->get($user['username']);
+		$role = $user['role'];
 
 		if (!$role)
 			return FALSE;
 
-		return is_array($userRoles);
+		return TRUE;
 
 	}
 
@@ -244,7 +244,7 @@ die($token);
 		$model_User = new Model_User;
 		$model_User->complete_login($user);
 
-                return parent::complete_login($user);
+                return parent::complete_login($user['useradmin']);
         }
 
         /**
