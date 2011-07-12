@@ -142,7 +142,7 @@ class Model_Auth_User {
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
-		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
+		//CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
 		CASSANDRA::selectColumnFamily('Users')->insert($username, array(
 								'email' => $fields['email'],
 								'password' => Auth::instance()->hash($fields['password']),
@@ -151,7 +151,8 @@ class Model_Auth_User {
 								'last_failed_login' => 0,
 								'failed_login_count' => 0,
 								'created' => '',
-								'modify' => 0
+								'modify' => 0,
+								'role'	=> 'login',
 							));
 		return TRUE;
 	}
