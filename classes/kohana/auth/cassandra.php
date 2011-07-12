@@ -241,7 +241,8 @@ die($token);
          */
         protected function complete_login($user)
         {
-                $user->complete_login();
+		$model_User = new Model_User;
+		$model_User->complete_login($user);
 
                 return parent::complete_login($user);
         }
