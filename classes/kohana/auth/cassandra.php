@@ -245,7 +245,7 @@ die($token);
 		$model_User = new Model_User;
 		$model_User->complete_login($user);
 
-                return parent::complete_login($user['useradmin']);
+                return parent::complete_login($user['username']);
         }
 
         /**
