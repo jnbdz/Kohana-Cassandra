@@ -57,11 +57,12 @@ class Kohana_Auth_Cassandra extends Auth {
 		// If the passwords match, perform a login
 		if ($user['password'] === $password)
 		{
-die('Password is good!');
+
 			if ($remember === TRUE)
 			{
 				// Token data
 				$token = sha1(uniqid(Text::random('alnum', 32), TRUE));
+die($token);
 				$data = array(
 					'token'	     => $token,
 					'created'    => time(),
@@ -81,7 +82,7 @@ die('Password is good!');
 
 			return TRUE;
 		}
-die('Password is bad!');
+
 		// Login failed
 		return FALSE;
 	}
