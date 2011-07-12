@@ -49,6 +49,7 @@ class Kohana_Auth_Cassandra extends Auth {
 			$username = $user;
 			// Load the user
 			$user = CASSANDRA::selectColumnFamily('Users')->get($username);
+			$user['username'] = $username;
 		} else
 		{
 			$username = $user['username'];
