@@ -22,14 +22,14 @@ class Kohana_Auth_Cassandra extends Auth {
 
 		if ( ! $user)
 			return FALSE;
-die(var_dump($user));
+
 		// Get all the roles
-		$userData = CASSANDRA::selectColumnFamily('UsersRoles')->get($username);
+		$userRoles = CASSANDRA::selectColumnFamily('UsersRoles')->get($user['username']);
 
 		if (!$role)
 			return FALSE;
 
-		return is_array($userData);
+		return is_array($userRoles);
 
 	}
 
