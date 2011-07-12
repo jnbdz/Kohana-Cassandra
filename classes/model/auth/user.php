@@ -51,18 +51,6 @@ class Model_Auth_User {
 	);
 
 	/**
-	 * Filters to run when data is set in this model. The password filter
-	 * automatically hashes the password when it's set in the model.
-	 *
-	 * @return array Filters
-	 */
-	protected $_filters = array(
-		'password' => array(
-			'Auth::instance' => 'hash'
-		)
-	);
-
-	/**
 	 * Labels for fields in this model
 	 *
 	 * @return array Labels
@@ -81,15 +69,9 @@ class Model_Auth_User {
 	 *
 	 * @return void
 	 */
-	public function complete_login($username)
+	public function complete_login($user)
 	{
-
-		$users = CASSANDRA::selectColumnFamily('Users');
-
-		$user = $users->get($username);
-
-		$users->insert($username, array('logins' => $user['logins'] + 1, 'last_login' => time())); 
-
+		CASSANDRA::selectColumnFamily('Users')->insert($user['username'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
 	}
 
 	/**
@@ -161,7 +143,16 @@ class Model_Auth_User {
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
 		CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
-		CASSANDRA::selectColumnFamily('Users')->insert($username, array('email' => $fields['email'], 'password' => Auth::instance()->hash($fields['password'])));
+		CASSANDRA::selectColumnFamily('Users')->insert($username, array(
+								'email' => $fields['email'],
+								'password' => Auth::instance()->hash($fields['password']),
+								'logins' => 0,
+								'last_login' => 0,
+								'last_failed_login' => 0,
+								'failed_login_count' => 0,
+								'created' => '',
+								'modify' => 0
+							));
 		return TRUE;
 	}
 
