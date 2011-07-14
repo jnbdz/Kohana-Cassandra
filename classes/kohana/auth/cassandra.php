@@ -24,7 +24,7 @@ class Kohana_Auth_Cassandra extends Auth {
 			return FALSE;
 
 		// Get all the roles
-		$role = $user['role'];
+		$role = $user->role;
 
 		if (!$role)
 			return FALSE;
