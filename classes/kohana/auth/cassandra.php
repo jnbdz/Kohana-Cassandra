@@ -244,7 +244,7 @@ die($token);
         {
 		$model_User = new Model_User;
 		$model_User->complete_login($user);
-die(var_dump((object) $user));
+
                 return parent::complete_login((object) $user);
         }
 
