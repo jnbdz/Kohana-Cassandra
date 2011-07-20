@@ -32,12 +32,12 @@ class Kohana_CASSANDRA {
 
 	}
 
-	public static function selectColumnFamily($col_fam)
+	public static function selectColumnFamily($col_fam, $autopack_names = TRUE, $autopack_values = TRUE, $read_consistency_level = cassandra_ConsistencyLevel::ONE, $write_consistency_level = cassandra_ConsistencyLevel::ONE, $buffer_size = DEFAULT_BUFFER_SIZE)
 	{
 
 		self::init();
 
-		return self::$ColumnFamily = new ColumnFamily(self::$pool, $col_fam);
+		return self::$ColumnFamily = new ColumnFamily(self::$pool, $col_fam, $autopack_names, $autopack_values, $read_consistency_level, $write_consistency_level, $buffer_size);
 
 	}
 
