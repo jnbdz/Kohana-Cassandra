@@ -59,7 +59,7 @@ echo $username;
 echo '<br>';
 echo $password;
 		// If the passwords match, perform a login
-		if ($user['password'] === $password)
+		if ($user['password'] === Auth::instance()->hash($password))
 		{
 
 			if ($remember === TRUE)
