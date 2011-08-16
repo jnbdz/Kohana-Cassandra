@@ -54,7 +54,8 @@ class Kohana_Auth_Cassandra extends Auth {
 		{
 			$username = $user['username'];
 		}
-
+var_dump($user);
+echo $username;
 		// If the passwords match, perform a login
 		if ($user['password'] === $password)
 		{
