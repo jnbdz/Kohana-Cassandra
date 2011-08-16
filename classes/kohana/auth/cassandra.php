@@ -80,10 +80,10 @@ die($token);
 
 			// Finish the login
 			$this->complete_login($user);
-
+die('Login Works!');
 			return TRUE;
 		}
-
+die('Login Failed!');
 		// Login failed
 		return FALSE;
 	}
