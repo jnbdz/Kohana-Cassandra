@@ -32,6 +32,15 @@ class Kohana_CASSANDRA {
 
 	}
 
+	public static function Util()
+	{
+
+		self::init();
+
+		return new CassandraUtil();
+
+	}
+
 	public static function selectColumnFamily($col_fam, $autopack_names = TRUE, $autopack_values = TRUE, $read_consistency_level = NULL, $write_consistency_level = NULL, $buffer_size = NULL)
 	{
 
@@ -57,6 +66,23 @@ class Kohana_CASSANDRA {
 
 		return self::$ColumnFamily->get_indexed_slices($index_clause);
 
+	}
+
+	public static function getCounter($row, $col, $col_fam = 'Counters')
+	{
+		return self::selectColumnFamily($col_fam)->get($row, array('Users'));
+	}
+
+	public static function incrCounter($row, $col, $incr_by, $col_fam = NULL)
+	{
+		$counter = self::getCounter($row, $col);
+		return self::$ColumnFamily->set($row, array($col => $counter + $incr_by));
+	}
+
+	public static function decrCounter($row, $col, $decr_by, $col_fam = NULL)
+	{
+		$counter = self::getCounter($row, $col);
+		return self::$ColumnFamily->set($row, array($col => $counter - $decr_by));
 	}
 
 } // End of Cassandra

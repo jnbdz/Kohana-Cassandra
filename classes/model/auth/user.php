@@ -71,7 +71,7 @@ class Model_Auth_User {
 	 */
 	public function complete_login($user)
 	{
-		CASSANDRA::selectColumnFamily('Users')->insert($user['username'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
+		CASSANDRA::selectColumnFamily('Users')->insert($user['id'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Model_Auth_User {
 	 * @param string $username
 	 * @return the timestamp for the operation
 	 */
-	public function create_user($fields, $username)
+	public function create_user($fields)
 	{
 		Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
@@ -142,8 +142,10 @@ class Model_Auth_User {
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
+		// Generate UUID!
+
 		//CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
-		CASSANDRA::selectColumnFamily('Users')->insert($username, array(
+		CASSANDRA::selectColumnFamily('Users')->insert($id, array(
 								'email' => $fields['email'],
 								'password' => Auth::instance()->hash($fields['password']),
 								'logins' => 0,
@@ -181,6 +183,20 @@ class Model_Auth_User {
 		{
 			// Send Error!
 		}
+	}
+
+	/**
+	 * Delete user
+	 *
+	 * @param unknown user
+	 * @return unknown
+	 */
+	public function delete_user($user)
+	{
+		// Validation ???
+		// Get ID
+		die(var_dump($user));
+		CASSANDRA::selectColumnFamily('Users')->remove($id);
 	}
 
 } // End Auth User Model
