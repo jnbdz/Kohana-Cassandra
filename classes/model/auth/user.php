@@ -71,7 +71,7 @@ class Model_Auth_User {
 	 */
 	public function complete_login($user)
 	{
-		CASSANDRA::selectColumnFamily('Users')->insert($user['id'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
+		CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
 	}
 
 	/**
@@ -142,19 +142,21 @@ class Model_Auth_User {
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
-		// Generate UUID!
+		// Generate a unique ID
+		$uuid = CASSANDRA::Util()->uuid1();
 
 		//CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
-		CASSANDRA::selectColumnFamily('Users')->insert($id, array(
-								'email' => $fields['email'],
-								'password' => Auth::instance()->hash($fields['password']),
-								'logins' => 0,
-								'last_login' => 0,
-								'last_failed_login' => 0,
-								'failed_login_count' => 0,
-								'created' => '',
-								'modify' => 0,
-								'role'	=> 'login',
+		CASSANDRA::selectColumnFamily('Users')->insert($uuid, array(
+								'username'		=> $fields['username'],
+								'email'			=> $fields['email'],
+								'password'		=> Auth::instance()->hash($fields['password']),
+								'logins'		=> 0,
+								'last_login'		=> 0,
+								'last_failed_login'	=> 0,
+								'failed_login_count'	=> 0,
+								'created'		=> date('YmdHis', time()),
+								'modify'		=> 0,
+								'role'			=> 'login',
 							));
 		return TRUE;
 	}
@@ -166,7 +168,7 @@ class Model_Auth_User {
 	 * @param string $username
 	 * @return the timestamp for the operation
 	 */
-	public function update_user($fields, $username)
+	public function update_user($fields)
 	{
 		Validation::factory($fields)
 			->rules('password', $this->_rules['password'])
@@ -177,7 +179,11 @@ class Model_Auth_User {
 		$users = CASSANDRA::selectColumnFamily('Users');
 		if ($users->get_cout($username))
 		{
-			return $users->insert($username, array('password' => $fields['password']));
+			return $users->insert($uuid, array(
+					//	'username'	=> $fields['username'],
+						'password'	=> $fields['password'],
+						'modify'	=> date('YmdHis', time()),
+					));
 		}
 		else
 		{
@@ -196,7 +202,7 @@ class Model_Auth_User {
 		// Validation ???
 		// Get ID
 		die(var_dump($user));
-		CASSANDRA::selectColumnFamily('Users')->remove($id);
+		CASSANDRA::selectColumnFamily('Users')->remove($['uuid']);
 	}
 
 } // End Auth User Model
