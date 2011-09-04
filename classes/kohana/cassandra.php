@@ -53,16 +53,9 @@ class Kohana_CASSANDRA {
 	public static function getIndexedSlices($indexes)
 	{
 
-		$index = array();
+		$index_exp = CassandraUtil::create_index_expression($indexes[0], $indexes[1]);
 
-		foreach($indexes as $col => $val)
-		{
-
-			array_push($index, CassandraUtil::create_index_expression($col, $val));
-
-		}
-
-		$index_clause = CassandraUtil::create_index_clause($index);
+		$index_clause = CassandraUtil::create_index_clause(array($index_exp));
 
 		return self::$ColumnFamily->get_indexed_slices($index_clause);
 
