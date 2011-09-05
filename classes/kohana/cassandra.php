@@ -41,7 +41,7 @@ class Kohana_CASSANDRA {
 
 	}
 
-	public static function selectColumnFamily($col_fam, $autopack_names = TRUE, $autopack_values = TRUE, $read_consistency_level = NULL, $write_consistency_level = NULL, $buffer_size = NULL)
+	public static function selectColumnFamily($col_fam, $autopack_names = TRUE, $autopack_values = TRUE, $read_consistency_level = 1, $write_consistency_level = 1, $buffer_size = 1024)
 	{
 
 		self::init();
