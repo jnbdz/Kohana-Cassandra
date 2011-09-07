@@ -204,8 +204,7 @@ class Model_Auth_User {
 	{
 		// Validation ???
 		// Get ID
-		die(var_dump($user));
-		CASSANDRA::selectColumnFamily('Users')->remove($['uuid']);
+		CASSANDRA::selectColumnFamily('Users')->remove($user['uuid']);
 	}
 
 } // End Auth User Model
