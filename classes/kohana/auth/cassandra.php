@@ -48,8 +48,11 @@ class Kohana_Auth_Cassandra extends Auth {
 		{
 			$username = $user;
 			// Load the user
-			$user = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
-			$user['username'] = $username;
+			$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+			foreach($user_infos as $uuid => $cols) {
+				$cols['uuid'] = $uuid;
+				$user = $cols;
+			}	
 		} else
 		{
 			$username = $user['username'];
@@ -72,7 +75,7 @@ die($token);
 				);
 
 				// Create a new autologin token
-				CASSANDRA::selectColumnFamily('UsersTokens')->insert($uuid, $data);
+				CASSANDRA::selectColumnFamily('UsersTokens')->insert($user['uuid'], $data);
 
 				// Set the autologin cookie
 				Cookie::set('authautologin', $token, $this->_config['lifetime']);
@@ -101,7 +104,11 @@ die($token);
 		$username = $user;
 
 		// Load the user
-		$user = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+		$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+		foreach($user_infos as $uuid => $cols) {
+			$cols['uuid'] = $uuid;
+			$user = $cols;
+		}
 
 		if ($mark_session_as_forced === TRUE)
 		{
@@ -161,7 +168,7 @@ die($token);
 				}
 
 				// Token is invalid
-				$usersTokens->remove($username);
+				$usersTokens->remove($user['uuid']);
 			}
 		}
 
@@ -208,15 +215,15 @@ die($token);
                         // Clear the autologin token from the database
 			$usersTokens = CASSANDRA::selectColumnFamily('UsersTokens');
 			$rows = CASSANDRA::getIndexedSlices(array('token' => $token));
-			foreach($rows as $username => $token){}
+			foreach($rows as $uuid => $token){}
 
                         if (is_array($token) AND $logout_all)
                         {
-				$usersTokens->remove($username);
+				$usersTokens->remove($uuid);
                         }
                         elseif (is_array($token))
                         {
-				$usersTokens->remove($username);
+				$usersTokens->remove($uuid);
                         }
                 }
 
@@ -232,7 +239,11 @@ die($token);
         public function password($username)
         {
 		// Load the user
-		$user = CASSANDRA::selectColumnFamily('Users')->get($username);
+		$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+		foreach($user_infos as $uuid => $cols) {
+			$cols['uuid'] = $uuid;
+			$user = $cols;
+		}
 
 		return $user['password'];
         }
