@@ -47,12 +47,14 @@ class Kohana_Auth_Cassandra extends Auth {
 		if ( ! is_array($user))
 		{
 			$username = $user;
+			echo('before');
 			// Load the user
 			$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
 			foreach($user_infos as $uuid => $cols) {
 				$cols['uuid'] = $uuid;
 				$user = $cols;
-			}	
+			}
+			echo 'After';	
 		} else
 		{
 			$username = $user['username'];
