@@ -71,7 +71,10 @@ class Model_Auth_User {
 	 */
 	public function complete_login($user)
 	{
-		CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array('logins' => $user['logins'] + 1, 'last_login' => time()));
+		CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array(
+									'logins'	=> $user['logins'] + 1,
+									'last_login'	=> date('YmdHis', time()),
+								));
 	}
 
 	/**
