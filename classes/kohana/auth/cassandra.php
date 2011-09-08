@@ -49,8 +49,8 @@ class Kohana_Auth_Cassandra extends Auth {
 			$username = $user;
 			echo('before');
 			// Load the user
-			$user_infos = CASSANDRA::selectColumnFamily('Users')
-			$user_infos = $user_infos->getIndexedSlices(array('username' => $username));
+			CASSANDRA::selectColumnFamily('Users');
+			$user_infos = CASSANDRA::getIndexedSlices(array('username' => $username));
 			foreach($user_infos as $uuid => $cols) {
 				$cols['uuid'] = $uuid;
 				$user = $cols;
@@ -107,7 +107,8 @@ die($token);
 		$username = $user;
 
 		// Load the user
-		$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+		CASSANDRA::selectColumnFamily('Users');
+		$user_infos = CASSANDRA::getIndexedSlices(array('username' => $username));
 		foreach($user_infos as $uuid => $cols) {
 			$cols['uuid'] = $uuid;
 			$user = $cols;
@@ -159,7 +160,8 @@ die($token);
 					Cookie::set('authautologin', $data['token'], $data['expires'] - time());
 
 					// Complete the login with the found data
-					$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+					CASSANDRA::selectColumnFamily('Users');
+					$user_infos = CASSANDRA::getIndexedSlices(array('username' => $username));
 					foreach($user_infos as $uuid => $cols) {
 						$cols['uuid'] = $uuid;
 						$user = $cols;
@@ -242,7 +244,8 @@ die($token);
         public function password($username)
         {
 		// Load the user
-		$user_infos = CASSANDRA::selectColumnFamily('Users')->getIndexedSlices(array('username' => $username));
+		CASSANDRA::selectColumnFamily('Users');
+		$user_infos = CASSANDRA::getIndexedSlices(array('username' => $username));
 		foreach($user_infos as $uuid => $cols) {
 			$cols['uuid'] = $uuid;
 			$user = $cols;
