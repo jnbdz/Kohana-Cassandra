@@ -173,24 +173,25 @@ class Model_Auth_User {
 	 */
 	public function update_user($fields)
 	{
-		Validation::factory($fields)
+		$validation = Validation::factory($fields)
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm'])
-			->filters('password', $this->_filters['password']);
+			->filters('password', array(Auth::instance(), 'hash'));
 
 		$this->validate($fields);
 		$users = CASSANDRA::selectColumnFamily('Users');
 		if ($users->get_cout($username))
 		{
 			return $users->insert($uuid, array(
-					//	'username'	=> $fields['username'],
+						'username'	=> $fields['username'],
 						'password'	=> $fields['password'],
+						'email'		=> $fields['email'],
 						'modify'	=> date('YmdHis', time()),
 					));
 		}
 		else
 		{
-			// Send Error!
+			return $validation;
 		}
 	}
 
