@@ -175,8 +175,7 @@ class Model_Auth_User {
 	{
 		$validation = Validation::factory($fields)
 			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm'])
-			->filter('password', array('Auth::instance()', 'hash'));
+			->rules('password_confirm', $this->_rules['password_confirm']);	
 
 		$this->validate($fields);
 		$users = CASSANDRA::selectColumnFamily('Users');
@@ -184,7 +183,7 @@ class Model_Auth_User {
 		{
 			return $users->insert($uuid, array(
 						'username'	=> $fields['username'],
-						'password'	=> $fields['password'],
+						'password'	=> Auth::instance()->hash($fields['password']),
 						'email'		=> $fields['email'],
 						'modify'	=> date('YmdHis', time()),
 					));
