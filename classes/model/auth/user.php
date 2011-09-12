@@ -167,33 +167,22 @@ class Model_Auth_User {
 	 */
 	public function update_user($fields)
 	{
-		$validation = Validation::factory($fields)
+		Validation::factory($fields)
+			->rules('username', $this->_rules['username'])
+			->rule('username', 'username_available', array($this, ':field'))
+			->rules('email', $this->_rules['email'])
+			->rule('email', 'email_available', array($this, ':field'))
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);	
 
-		die(var_dump(Auth::instance()->get_user()));
+		$user_infos = Auth::instance()->get_user();
 
-		CASSANDRA::selectColumnFamily('Users');
-		$user_infos = CASSANDRA::getIndexedSlices(array('username' => 'jnbdz'));
-
-		$user = FALSE;
-		foreach ($user_infos as $key => $val) {
-			$user = $key;
-		}
-
-		if ($user)
-		{
-			return $users->insert($uuid, array(
-						'username'	=> $fields['username'],
-						'password'	=> Auth::instance()->hash($fields['password']),
-						'email'		=> $fields['email'],
-						'modify'	=> date('YmdHis', time()),
-					));
-		}
-		else
-		{
-			return $validation;
-		}
+		return $users->insert($user_infos['uuid'], array(
+						'username'      => $fields['username'],
+                                                'password'      => Auth::instance()->hash($fields['password']),
+                                                'email'         => $fields['email'],
+                                                'modify'        => date('YmdHis', time()),
+                                        ));
 	}
 
 	/**
