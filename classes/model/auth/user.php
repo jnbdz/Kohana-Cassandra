@@ -78,7 +78,7 @@ class Model_Auth_User {
 	}
 
 	/**
-	 * Does the reverse of unique_key_exists() by triggering error if username exists.
+	 * Does the reverse of row_key_exists() by triggering error if username exists.
 	 * Validation callback.
 	 *
 	 * @param   Validation  Validation object
@@ -87,7 +87,7 @@ class Model_Auth_User {
 	 */
 	public function username_available(Validation $validation, $field)
 	{
-		if ($this->row_key_exists($validation[$field]))
+		if ($this->row_key_exists('username', $validation[$field]))
 		{
 			$validation->error($field, 'username_available', array($validation[$field]));
 		}
@@ -103,29 +103,23 @@ class Model_Auth_User {
 	 */
 	public function email_available(Validation $validation, $field)
 	{
-		if ($this->unique_key_exists('email', $validation[$field]))
+		if ($this->row_key_exists('email', $validation[$field]))
 		{
 			$validation->error($field, 'email_available', array($validation[$field]));
 		}
 	}
 
-	public function row_key_exists($value)
-	{
-		$user = CASSANDRA::selectColumnFamily('Users');
-		return (bool) $user->get_count($value);
-	}
-
-	/**
-	 * Tests if a unique key value exists in the database.
-	 *
-	 * @param   mixed    the value to test
-	 * @param   string   field name
-	 * @return  boolean
-	 */
-	public function unique_key_exists($col, $value)
+	public function row_key_exists($what, $value)
 	{
 		CASSANDRA::selectColumnFamily('Users');
-		return (bool) CASSANDRA::getIndexedSlices(array($col => $value));
+		$infos = CASSANDRA::getIndexedSlices(array($what => $value));
+
+		$info = FALSE;
+		foreach ($infos as $k => $v) {
+			$info = $k;
+		}
+
+		return (bool) $info;
 	}
 
 	/**
@@ -176,9 +170,18 @@ class Model_Auth_User {
 		$validation = Validation::factory($fields)
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);	
-	
-		$users = CASSANDRA::selectColumnFamily('Users');
-		if ($users->get_cout($username))
+
+		die(var_dump($fields));
+
+		CASSANDRA::selectColumnFamily('Users');
+		$user_infos = CASSANDRA::getIndexedSlices(array('username' => 'jnbdz'));
+
+		$user = FALSE;
+		foreach ($user_infos as $key => $val) {
+			$user = $key;
+		}
+
+		if ($user)
 		{
 			return $users->insert($uuid, array(
 						'username'	=> $fields['username'],
