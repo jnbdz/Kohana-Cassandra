@@ -177,7 +177,7 @@ class Model_Auth_User {
 
 		$user_infos = Auth::instance()->get_user();
 
-		CASSANDRA::selectColumnFamily('Users')->insert($user_infos['uuid'], array(
+		CASSANDRA::selectColumnFamily('Users')->insert($user_infos->uuid, array(
 								'username'      => $fields['username'],
 								'password'	=> Auth::instance()->hash($fields['password']),
 								'email'		=> $fields['email'],
