@@ -177,12 +177,13 @@ class Model_Auth_User {
 
 		$user_infos = Auth::instance()->get_user();
 
-		return $users->insert($user_infos['uuid'], array(
-						'username'      => $fields['username'],
-                                                'password'      => Auth::instance()->hash($fields['password']),
-                                                'email'         => $fields['email'],
-                                                'modify'        => date('YmdHis', time()),
-                                        ));
+		CASSANDRA::selectColumnFamily('Users')->insert($user_infos['uuid'], array(
+								'username'      => $fields['username'],
+								'password'	=> Auth::instance()->hash($fields['password']),
+								'email'		=> $fields['email'],
+								'modify'	=> date('YmdHis', time()),
+							));
+		return TRUE;
 	}
 
 	/**
