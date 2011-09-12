@@ -55,7 +55,7 @@ class Kohana_Auth_Cassandra extends Auth {
 			} else {
 				$col = 'email';
 			}
-die($col);
+
 			// Load the user
 			CASSANDRA::selectColumnFamily('Users');
 			$user_infos = CASSANDRA::getIndexedSlices(array($col => $username));
@@ -76,7 +76,7 @@ die($col);
 			{
 				// Token data
 				$token = sha1(uniqid(Text::random('alnum', 32), TRUE));
-die($token);
+//die($token);
 				$data = array(
 					'token'	     => $token,
 					'created'    => time(),
