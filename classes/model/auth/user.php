@@ -171,7 +171,7 @@ class Model_Auth_User {
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);	
 
-		die(Auth::instance()->get_user());
+		die(var_dump(Auth::instance()->get_user()));
 
 		CASSANDRA::selectColumnFamily('Users');
 		$user_infos = CASSANDRA::getIndexedSlices(array('username' => 'jnbdz'));
