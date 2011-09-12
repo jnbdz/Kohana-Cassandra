@@ -55,7 +55,7 @@ class Kohana_Auth_Cassandra extends Auth {
 			} else {
 				$col = 'email';
 			}
-
+die($col);
 			// Load the user
 			CASSANDRA::selectColumnFamily('Users');
 			$user_infos = CASSANDRA::getIndexedSlices(array($col => $username));
