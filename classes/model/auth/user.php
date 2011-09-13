@@ -192,11 +192,10 @@ class Model_Auth_User {
 	 * @param unknown user
 	 * @return unknown
 	 */
-	public function delete_user($user)
+	public function delete_user($uuid)
 	{
-		// Validation ???
-		// Get ID
-		CASSANDRA::selectColumnFamily('Users')->remove($user['uuid']);
+		// Validation
+		CASSANDRA::selectColumnFamily('Users')->remove($uuid);
 	}
 
 } // End Auth User Model
