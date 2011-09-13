@@ -168,10 +168,8 @@ class Model_Auth_User {
 	public function update_user($fields)
 	{
 		Validation::factory($fields)
-			->rules('username', $this->_rules['username'])
-			->rule('username', 'username_available', array($this, ':field'))
-			->rules('email', $this->_rules['email'])
-			->rule('email', 'email_available', array($this, ':field'))
+			->rules('username', $this->_rules['username'])	
+			->rules('email', $this->_rules['email'])	
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);	
 
