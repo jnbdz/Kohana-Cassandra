@@ -123,7 +123,7 @@ class Model_Auth_User {
 	}
 
 	/**
-	 * Adds or updates the Users ColumnFamily
+	 * Adds the Users ColumnFamily
 	 *
 	 * @param array $fields
 	 * @param string $username
@@ -181,6 +181,15 @@ class Model_Auth_User {
 								'email'		=> $fields['email'],
 								'modify'	=> date('YmdHis', time()),
 							));
+
+		$user_infos->username = $fields['username'];
+		$user_infos->email = $fields['email'];
+		$user_infos->modify = date('YmdHis', time());
+
+		// Update session because it use via Auth::instance()->get_user() to set data in the view
+		$config = Kohana::$config->load('auth');
+		Session::instance($config->session_type)->set($config->session_key, $user_infos);
+
 		return TRUE;
 	}
 
