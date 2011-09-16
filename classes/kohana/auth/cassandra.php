@@ -46,26 +46,16 @@ class Kohana_Auth_Cassandra extends Auth {
 
 		if ( ! is_array($user))
 		{
-			$username = $user;
-
-			$pos = strrpos($username, '@');
-
-			if ($pos === FALSE) {
-				$col = 'username';
-			} else {
-				$col = 'email';
-			}
+	
+			$cols = (Valid::email($user)) ? 'email' : 'username';
 
 			// Load the user
 			CASSANDRA::selectColumnFamily('Users');
-			$user_infos = CASSANDRA::getIndexedSlices(array($col => $username));
+			$user_infos = CASSANDRA::getIndexedSlices(array($col => $user));
 			foreach($user_infos as $uuid => $cols) {
 				$cols['uuid'] = $uuid;
 				$user = $cols;
 			}
-		} else
-		{
-			$username = $user['username'];
 		}
 
 		// If the passwords match, perform a login
@@ -272,6 +262,7 @@ class Kohana_Auth_Cassandra extends Auth {
         {
 		$model_User = new Model_User;
 		$model_User->complete_login($user);
+		unset($user['password']);
 
                 return parent::complete_login((object) $user);
         }
