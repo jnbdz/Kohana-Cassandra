@@ -47,7 +47,7 @@ class Kohana_Auth_Cassandra extends Auth {
 		if ( ! is_array($user))
 		{
 	
-			$cols = (Valid::email($user)) ? 'email' : 'username';
+			$col = (Valid::email($user)) ? 'email' : 'username';
 
 			// Load the user
 			CASSANDRA::selectColumnFamily('Users');
