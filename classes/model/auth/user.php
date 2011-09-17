@@ -196,13 +196,92 @@ class Model_Auth_User {
 	/**
 	 * Delete user
 	 *
-	 * @param unknown user
+	 * @param unknown uuid
 	 * @return unknown
 	 */
 	public function delete_user($uuid)
 	{
 		// Validation
 		CASSANDRA::selectColumnFamily('Users')->remove($uuid);
+	}
+
+	/**
+	 * Get activation code
+	 *
+	 * @param string email
+	 * @return array information related to the activation code
+	 */
+	public function get_activation_code_with_email($email)
+	{
+		CASSANDRA::selectColumnFamily('UsersActivationCode');
+		$user_act_code_info = CASSANDRA::getIndexedSlices(array('email' => $email));
+		foreach ($user_act_code_info as $uuid => $cols)
+		{
+			$cols['uuid'] = $uuid;
+			return $cols;
+			break;
+		}
+	}
+
+	/**
+	 * Generate activation code
+	 *
+	 * @param array user
+	 * @return bool shows if everything went well
+	 */
+	public function add_activation_code($user, $email, $activation_code)
+	{
+
+		if (Kohana::$config->load('useradmin')->get('activation_code_user_role') !== 'login')
+		{
+			if ($user['role'] !== Kohana::$config->load('useradmin')->get('activation_code_user_role'))
+			{
+				return FALSE;
+			}
+		}
+
+		if (Kohana::$config->load('useradmin')->get('activation_code_limit') > 0)
+		{
+			// Limit user invitations number
+
+			if ((Kohana::$config->load('useradmin')->get('activation_code_limit') - $user['activation_code_num']) === 0)
+			{
+				return FALSE;
+			}
+
+			CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array(
+									'activation_code_num'	=> $user['activation_code_num'] + 1,
+								));
+		}
+
+		$uuid = CASSANDRA::Util()->uuid1();
+		// Add activation code for invited user
+		CASSANDRA::selectColumnFamily('UsersActivationCode')->insert($uuid, array(
+										'host'			=> $user['uuid'],
+										'email'			=> $email,
+										'activation_code'	=> $activation_code,
+									));
+
+		return TRUE;
+	}
+
+	/**
+	 * Remove activation code
+	 *
+	 * @param array user
+	 * @return nothing
+	 */
+	public function remove_activation_code($user, $email)
+	{
+		$act_code_info = $this->get_activation_code_with_email($email);
+		CASSANDRA::selectColumnFamily('UsersActivationCode')->remove($act_code_info['uuid']);
+
+		if (Kohana::$config->load('useradmin')->get('activation_code_limit') > 0)
+		{
+			CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array(
+									'activation_code_num'	=> $user['activation_code_num'] - 1,
+								));
+		}
 	}
 
 } // End Auth User Model
