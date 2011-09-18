@@ -214,7 +214,7 @@ class Model_Auth_User {
 	public function get_activation_code_with_email($email)
 	{
 		CASSANDRA::selectColumnFamily('UsersActivationCode');
-		$user_act_code_info = CASSANDRA::getIndexedSlices(array('email' => $email));
+		$user_act_code_info = CASSANDRA::getIndexedSlices(array('invited_user_email' => $email));
 		foreach ($user_act_code_info as $uuid => $cols)
 		{
 			$cols['uuid'] = $uuid;
@@ -257,8 +257,8 @@ class Model_Auth_User {
 		$uuid = CASSANDRA::Util()->uuid1();
 		// Add activation code for invited user
 		CASSANDRA::selectColumnFamily('UsersActivationCode')->insert($uuid, array(
-										'host'			=> $user['uuid'],
-										'email'			=> $email,
+										'host_of_activ_code'	=> $user['uuid'],
+										'invited_user_email'	=> $email,
 										'activation_code'	=> $activation_code,
 									));
 
