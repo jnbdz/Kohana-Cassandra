@@ -139,6 +139,10 @@ class Model_Auth_User {
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
+		if (Kohana::config('useradmin')->activation_code) {
+			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
+		}
+
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
 
@@ -220,6 +224,23 @@ class Model_Auth_User {
 			$cols['uuid'] = $uuid;
 			return $cols;
 			break;
+		}
+	}
+
+	/**
+	 * Check if the activation code is register
+	 *
+	 * @param string activation_code
+	 * @return bool
+	 */
+	public function check_activation_code(Validation $validation, $field)
+	{
+		CASSANDRA::selectColumnFamily('UsersActivationCode');
+		$user_act_code_info = CASSANDRA::getIndexedSlices(array('activation_code' => $activation_code));
+		foreach ($user_act_code_info as $uuid => $cols) {}
+		if (!$uuid)
+		{
+			$validation->error($field, 'check_activation_code', array($validation[$field]));
 		}
 	}
 
