@@ -158,6 +158,7 @@ class Model_Auth_User {
 								'created'		=> date('YmdHis', time()),
 								'modify'		=> 0,
 								'role'			=> 'login',
+								'email_verified'	=> $fields['email_code'],
 							));
 		return TRUE;
 	}
