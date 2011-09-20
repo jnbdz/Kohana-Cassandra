@@ -188,7 +188,15 @@ class Model_Auth_User {
 	{
 		CASSANDRA::selectColumnFamily('Users')->insert(Auth::instance()->get_user()->uuid, array(
 								'email_verified'	=> 'true',
+								'modify'		=> date('YmdHis', time()),
 							));
+
+		$user_infos = Auth::instance()->get_user();
+		$user_infos->email_verified = 'true';
+		$user_infos->modify = date('YmdHis', time());
+
+		$config = Kohana::$config->load('auth');
+		Session::instance($config->session_type)->set($config->session_key, $user_infos);
 	}
 
 	/**
