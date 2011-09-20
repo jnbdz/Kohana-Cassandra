@@ -164,6 +164,21 @@ class Model_Auth_User {
 	}
 
 	/**
+	 * Verifies that the code for email confirmation is good
+	 *
+	 * @param   Validation  Validation object
+	 * @param   String 	Field Name
+	 * @return Exception if the wrong value was given
+	 */
+	public function email_confirmation_code(Validation $validation, $field)
+	{
+		if(Auth::instance()->get_user()->email_verified !== $field)
+		{
+			$validation->error($field, 'email_confirmation_code', array($validation[$field]));
+		}
+	}
+
+	/**
 	 * Updates the Users ColumnFamily
 	 *
 	 * @param array $fields
