@@ -168,7 +168,7 @@ class Model_Auth_User {
 	 *
 	 * @param   Validation  Validation object
 	 * @param   String 	Field Name
-	 * @return Exception if the wrong value was given
+	 * @return  Validation 
 	 */
 	public function email_confirmation_code(Validation $validation, $field)
 	{
@@ -176,6 +176,19 @@ class Model_Auth_User {
 		{
 			$validation->error($field, 'email_confirmation_code', array($validation[$field]));
 		}
+	}
+
+	/**
+	 * Update the email_verified column to true
+	 *
+	 * @param None
+	 * @return unknown
+	 */
+	public function update_email_confirmation()
+	{
+		CASSANDRA::selectColumnFamily('Users')->insert(Auth::instance()->get_user()->uuid, array(
+								'email_verified'	=> 'true',
+							));
 	}
 
 	/**
