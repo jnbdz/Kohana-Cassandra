@@ -209,22 +209,34 @@ class Model_Auth_User {
 	public function update_user($fields)
 	{
 		Validation::factory($fields)
-			->rules('username', $this->_rules['username'])	
-			->rules('email', $this->_rules['email'])	
-			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm']);	
+			->rules('username', $this->_rules['username'])
+			->rules('email', $this->_rules['email']);
+
 
 		$user_infos = Auth::instance()->get_user();
 
-		CASSANDRA::selectColumnFamily('Users')->insert($user_infos->uuid, array(
-								'username'      => $fields['username'],
-								'password'	=> Auth::instance()->hash($fields['password']),
-								'email'		=> $fields['email'],
-								'modify'	=> date('YmdHis', time()),
-							));
+		$update = array(
+					'username'              => $fields['username'],
+					'email'                 => $fields['email'],
+					'modify'                => date('YmdHis', time()),
+					'email_verified'        => $fields['email_code'],
+				);
+
+		if(isset($fields['password']))
+		{
+
+			Validation::factory($fields)
+				->rules('password', $this->_rules['password'])
+				->rules('password_confirm', $this->_rules['password_confirm']);
+
+			$update = array_merge($update, array('password' => Auth::instance()->hash($fields['password'])));
+		}
+
+		CASSANDRA::selectColumnFamily('Users')->insert($user_infos->uuid, $update);
 
 		$user_infos->username = $fields['username'];
 		$user_infos->email = $fields['email'];
+		$user_infos->email_verified = $fields['email_code'];
 		$user_infos->modify = date('YmdHis', time());
 
 		// Update session because it use via Auth::instance()->get_user() to set data in the view
