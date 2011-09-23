@@ -64,7 +64,7 @@ class Kohana_Auth_Cassandra extends Auth {
 						':username'     => $user['username'],
 						':uuid'         => $user['uuid'],
 					));
-					Message::add('error', __('There is a conflic. Please wait will we clear this problem.'));
+					Message::add('error', __('There is a conflic. Please wait while we solve this problem.'));
 					$user = FALSE;
 					break;
 				}
