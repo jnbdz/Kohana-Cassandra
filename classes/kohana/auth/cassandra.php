@@ -60,6 +60,7 @@ class Kohana_Auth_Cassandra extends Auth {
 				{	
 					$this->request->redirect('error/conflic');
 					Log::add(Log::ERROR, 'There was a conflic with the username and/or email. UUID: '.$user['uuid'].' username: '.$user['username'].' email: '.$user['email']);
+					die('TTT');
 					break;
 					return;
 				}
