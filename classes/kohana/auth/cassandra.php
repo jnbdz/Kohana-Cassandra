@@ -52,9 +52,18 @@ class Kohana_Auth_Cassandra extends Auth {
 			// Load the user
 			CASSANDRA::selectColumnFamily('Users');
 			$user_infos = CASSANDRA::getIndexedSlices(array($col => $user));
+			$i=0;
 			foreach($user_infos as $uuid => $cols) {
 				$cols['uuid'] = $uuid;
 				$user = $cols;
+				if($i === 1)
+				{
+					$this->request->redirect('error/conflic');
+					Log::add(Log::ERROR, 'There was a conflic with the username and/or email. '.var_dump($user));
+					break;
+					return;
+				}
+				$i++;
 			}
 		}
 
