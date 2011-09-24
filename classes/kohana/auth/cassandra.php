@@ -61,8 +61,8 @@ class Kohana_Auth_Cassandra extends Auth {
 					Kohana::$log->add(Log::ERROR, 'There was a conflic with the username and/or email. UUID: :uuid username: :username email: :email', array(
 						':email'        => $user['email'],
 						':username'     => $user['username'],
-						':uuid'         => $user['uuid'],
-					))->write();
+						':uuid'         => CASSANDRA::Util()->import($user['uuid']),
+					));
 					Message::add('error', __('There is a conflic. Please wait while we solve this problem.'));
 					$user = FALSE;
 					break;
