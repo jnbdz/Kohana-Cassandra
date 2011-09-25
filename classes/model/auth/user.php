@@ -159,8 +159,7 @@ class Model_Auth_User {
 								'modify'		=> 0,
 								'role'			=> 'login',
 								'email_verified'	=> $fields['email_code'],
-							));
-		return TRUE;
+							));	
 	}
 
 	/**
