@@ -131,7 +131,7 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
-		Validation::factory($fields)
+		$validation = Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
 			->rule('username', 'username_available', array($this, ':field'))
 			->rules('email', $this->_rules['email'])
@@ -140,7 +140,7 @@ class Model_Auth_User {
 			->rules('password_confirm', $this->_rules['password_confirm']);
 
 		if (Kohana::config('useradmin')->activation_code) {
-			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
+			$validation = Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
 		}
 
 		// Generate a unique ID
@@ -159,7 +159,10 @@ class Model_Auth_User {
 								'modify'		=> 0,
 								'role'			=> 'login',
 								'email_verified'	=> $fields['email_code'],
-							));	
+							));
+
+		return $validation;
+
 	}
 
 	/**
