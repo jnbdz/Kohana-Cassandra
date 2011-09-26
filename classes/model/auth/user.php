@@ -55,14 +55,11 @@ class Model_Auth_User {
 	 *
 	 * @return array Labels
 	 */
-	public function labels()
-	{
-		return array(
-			'username'         => 'username',
-			'email'            => 'email address',
-			'password'         => 'password',
-		);
-	}
+	protected $_labels = array(
+		'username'         => 'username',
+		'email'            => 'email address',
+		'password'         => 'password',
+	);
 
 	/**
 	 * Complete the login for a user by incrementing the logins and saving login timestamp
@@ -131,16 +128,17 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
-		$validation = Validation::factory($fields)
+		Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
 			->rule('username', 'username_available', array($this, ':field'))
 			->rules('email', $this->_rules['email'])
 			->rule('email', 'email_available', array($this, ':field'))
 			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm']);
+			->rules('password_confirm', $this->_rules['password_confirm'])
+			->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
-			$validation = Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
+			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
 		}
 
 		// Generate a unique ID
@@ -160,9 +158,6 @@ class Model_Auth_User {
 								'role'			=> 'login',
 								'email_verified'	=> $fields['email_code'],
 							));
-
-		return $validation;
-
 	}
 
 	/**
