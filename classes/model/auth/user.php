@@ -134,8 +134,8 @@ class Model_Auth_User {
 			->rules('email', $this->_rules['email'])
 			->rule('email', 'email_available', array($this, ':field'))
 			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm'])
-			->labels($_labels);
+			->rules('password_confirm', $this->_rules['password_confirm']);
+			//->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
 			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
