@@ -14,47 +14,47 @@ $this->ColumnFamily = $this->cassandra->selectColumnFamily('ColumnFamily');
 Intall Cassandra
 ----------
 
-wget “cassandra”
-tar -zxvf apache-cassandra-*
-rm apache-cassandra-*.tar.gz
-mv apache-cassandra-* cassandra
-sudo mkdir -p /var/log/cassandra
-sudo chown -R `whoami` /var/log/cassandra
-sudo mkdir -p /var/lib/cassandra
-sudo chown -R `whoami` /var/lib/cassandra
+- wget “cassandra”
+- tar -zxvf apache-cassandra-*
+- rm apache-cassandra-*.tar.gz
+- mv apache-cassandra-* cassandra
+- sudo mkdir -p /var/log/cassandra
+- sudo chown -R `whoami` /var/log/cassandra
+- sudo mkdir -p /var/lib/cassandra
+- sudo chown -R `whoami` /var/lib/cassandra
 
 Install Thrift
 ----------
 
-apt-get install libboost-dev python-dev autoconf automake pkg-config make libtool flex bison build-essential
-cd ~
-wget “thrift”
-tar -zxvf thrift-*
-rm thrift-*.tar.gz
-cd thrift
-./configure
-make
-make install
-./compiler/cpp/thrift -gen php ../cassandra/interface/cassandra.thrift
-sudo mkdir -p /usr/share/php/Thrift
-sudo cp -R gen-php/ /usr/share/php/Thrift/packages/
-sudo cp -R lib/php/src/* /usr/share/php/Thrift/
-cd ~/thrift/lib/php/src/ext/thrift_protocol/
-phpize
-./configure --enable-thrift_protocol
-cd ~/thrift
-make
-ls /usr/lib/php5/
-#(get the name[it’s a number] of the folder)
-sudo cp ~/thrift/lib/php/src/ext/thrift_protocol/modules/thrift_protocol.so /usr/lib/php5/”folder name”/
-touch /etc/php5/conf.d/thrift_protocol.ini
-vi /etc/php5/conf.d/thrift_protocol.ini -> extension=thrift_protocol.so
+- apt-get install libboost-dev python-dev autoconf automake pkg-config make libtool flex bison build-essential
+- cd ~
+- wget “thrift”
+- tar -zxvf thrift-*
+- rm thrift-*.tar.gz
+- cd thrift
+- ./configure
+- make
+- make install
+- ./compiler/cpp/thrift -gen php ../cassandra/interface/cassandra.thrift
+- sudo mkdir -p /usr/share/php/Thrift
+- sudo cp -R gen-php/ /usr/share/php/Thrift/packages/
+- sudo cp -R lib/php/src/* /usr/share/php/Thrift/
+- cd ~/thrift/lib/php/src/ext/thrift_protocol/
+- phpize
+- ./configure --enable-thrift_protocol
+- cd ~/thrift
+- make
+- ls /usr/lib/php5/
+- (get the name[it’s a number] of the folder)
+- sudo cp ~/thrift/lib/php/src/ext/thrift_protocol/modules/thrift_protocol.so /usr/lib/php5/”folder name”/
+- touch /etc/php5/conf.d/thrift_protocol.ini
+- vi /etc/php5/conf.d/thrift_protocol.ini -> extension=thrift_protocol.so
 
 Install PHPCassa
 ----------
 
-Get PHPCassa from GitHub: https://github.com/thobbs/phpcassa
-Put PHPCassa in the root of your website
+- Get PHPCassa from GitHub: https://github.com/thobbs/phpcassa
+- Put PHPCassa in the root of your website
 
 Copyright
 ----------
