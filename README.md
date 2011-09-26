@@ -6,10 +6,19 @@ Cassandra support for Kohana 3.1.x
 How to use
 ----------
 
-First you need to download PHPCassa (https://github.com/thobbs/phpcassa) to your website root.
+- To connect to Cassandra: `CASSANDRA::init();` (it is needed, by default every static method will make sure that the connection was made to Cassandra)
+- To select a column Family: `CASSANDRA::selectColumnFamily('column_family');`
+- To select column families via a or many index: `getIndexedSlices(array('index_name' => 'value'));
+- For column families made for counters `CASSANDRA::getCounter();`, `CASSANDRA::incrCounter();` and `CASSANDRA::decrCounter();`
+- For utilities (the list is found in PHPCassa documentation): `CASSANDRA::Util()->the_utility();`
 
-$this->cassandra = new Cassandra();
-$this->ColumnFamily = $this->cassandra->selectColumnFamily('ColumnFamily');
+For more details about those static methods go to the code: https://github.com/jnbdz/Kohana-Cassandra/blob/master/classes/kohana/cassandra.php
+
+Configuration File
+----------
+
+- `server` config is for the pool of servers that hold your Cassandra DBs.
+- `keyspace` is the keyspace name that Kohana-Cassandra will connect to.
 
 Intall Cassandra
 ----------
