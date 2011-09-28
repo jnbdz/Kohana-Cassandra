@@ -143,7 +143,7 @@ class Model_Auth_User {
 
 		if(!$validation->check())
 		{
-			die('Throw Exception');
+			throw Validation_Exception($validation, __('Your registering information is not valid.'));
 		}
 
 		// Generate a unique ID
