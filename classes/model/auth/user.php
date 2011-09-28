@@ -46,7 +46,7 @@ class Model_Auth_User {
 			'not_empty' => NULL,
 			'min_length' => array(4),
 			'max_length' => array(127),
-			'validate::email' => NULL,
+			'email' => NULL,
 		),
 	);
 
@@ -128,17 +128,22 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
-		Validation::factory($fields)
+		$validation = Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
-			->rule('username', 'username_available', array($this, ':field'))
+			->rule('username', array($this, 'username_available'), array($this, ':field'))
 			->rules('email', $this->_rules['email'])
-			->rule('email', 'email_available', array($this, ':field'))
+			->rule('email', array($this, 'email_available'), array($this, ':field'))
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 			//->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
 			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
+		}
+
+		if(!$validation->check())
+		{
+			die('Throw Exception');
 		}
 
 		// Generate a unique ID
