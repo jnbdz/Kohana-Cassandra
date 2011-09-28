@@ -40,7 +40,7 @@ class Model_Auth_User {
 			array('max_length', array(42)),
 		),
 		'password_confirm' => array(
-			array('matches', array('password')),
+			array('matches', array('password', 'password_confirm')),
 		),
 		'email' => array(
 			array('not_empty'),
