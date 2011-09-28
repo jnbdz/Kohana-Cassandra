@@ -130,15 +130,15 @@ class Model_Auth_User {
 	{
 		$validation = Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
-			->rule('username', array($this, 'username_available'), array($this, ':field'))
+			->rule('username', array($this, 'username_available'), array(':validation', ':field'))
 			->rules('email', $this->_rules['email'])
-			->rule('email', array($this, 'email_available'), array($this, ':field'))
+			->rule('email', array($this, 'email_available'), array(':validation', ':field'))
 			->rules('password', $this->_rules['password'])
 			->rules('password_confirm', $this->_rules['password_confirm']);
 			//->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
-			Validation::factory($fields)->rule('activation_code', 'check_activation_code', array($this, ':field'));
+			$validation->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
 		if(!$validation->check())
