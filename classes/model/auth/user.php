@@ -30,7 +30,7 @@ class Model_Auth_User {
 	protected $_rules = array(
 		'username' => array(
 			array('not_empty'),
-			array('min_length' array(4)),
+			array('min_length', array(4)),
 			array('max_length', array(32)),
 			array('regex', array('/^[-\pL\pN_.]++$/uD')),
 		),
