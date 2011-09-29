@@ -142,8 +142,7 @@ class Model_Auth_User {
 		}
 
 		if(!$validation->check())
-		{
-			$validation->errors('register/user');
+		{	
 			throw new Validation_Exception($validation, __('Your registering information is not valid.'));
 		}
 
