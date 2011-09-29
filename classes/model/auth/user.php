@@ -27,7 +27,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Rules
 	 */
-	protected $_rules = array(
+	/*protected $_rules = array(
 		'username' => array(
 			array('not_empty'),
 			array('min_length', array(4)),
@@ -48,19 +48,19 @@ class Model_Auth_User {
 			array('max_length', array(127)),
 			array('email'),
 		),
-	);
+	);*/
 
 	/**
 	 * Labels for fields in this model
 	 *
 	 * @return array Labels
 	 */
-	protected $_labels = array(
+/*	protected $_labels = array(
 		'username'         => 'username',
 		'email'            => 'email address',
 		'password'         => 'password',
 	);
-
+*/
 	/**
 	 * Complete the login for a user by incrementing the logins and saving login timestamp
 	 *
