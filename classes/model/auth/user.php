@@ -27,7 +27,7 @@ class Model_Auth_User {
 	 *
 	 * @return array Rules
 	 */
-	/*protected $_rules = array(
+	protected $_rules = array(
 		'username' => array(
 			array('not_empty'),
 			array('min_length', array(4)),
@@ -48,19 +48,19 @@ class Model_Auth_User {
 			array('max_length', array(127)),
 			array('email'),
 		),
-	);*/
+	);
 
 	/**
 	 * Labels for fields in this model
 	 *
 	 * @return array Labels
 	 */
-/*	protected $_labels = array(
+	protected $_labels = array(
 		'username'         => 'username',
 		'email'            => 'email address',
 		'password'         => 'password',
 	);
-*/
+
 	/**
 	 * Complete the login for a user by incrementing the logins and saving login timestamp
 	 *
@@ -128,6 +128,25 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
+		$validation = Validation::factory($fields)
+			->rules('username', $this->_rules['username'])
+			->rule('username', array($this, 'username_available'), array(':validation', ':field'))
+			->rules('email', $this->_rules['email'])
+			->rule('email', array($this, 'email_available'), array(':validation', ':field'))
+			->rules('password', $this->_rules['password'])
+			->rules('password_confirm', $this->_rules['password_confirm']);
+			//->labels($_labels);
+
+		if (Kohana::config('useradmin')->activation_code) {
+			$validation->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
+		}
+
+		if(!$validation->check())
+		{
+			$validation->errors('register/user');
+			throw new Validation_Exception($validation, __('Your registering information is not valid.'));
+		}
+
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
 
