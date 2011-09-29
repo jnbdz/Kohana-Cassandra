@@ -128,25 +128,6 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
-		$validation = Validation::factory($fields)
-			->rules('username', $this->_rules['username'])
-			->rule('username', array($this, 'username_available'), array(':validation', ':field'))
-			->rules('email', $this->_rules['email'])
-			->rule('email', array($this, 'email_available'), array(':validation', ':field'))
-			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm']);
-			//->labels($_labels);
-
-		if (Kohana::config('useradmin')->activation_code) {
-			$validation->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
-		}
-
-		if(!$validation->check())
-		{
-			$validation->errors('register/user');
-			throw new Validation_Exception($validation, __('Your registering information is not valid.'));
-		}
-
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
 
