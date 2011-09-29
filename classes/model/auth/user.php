@@ -134,8 +134,7 @@ class Model_Auth_User {
 			->rules('email', $this->_rules['email'])
 			->rule('email', array($this, 'email_available'), array(':validation', ':field'))
 			->rules('password', $this->_rules['password'])
-			->rules('password_confirm', $this->_rules['password_confirm'])
-			->errors('register/user');
+			->rules('password_confirm', $this->_rules['password_confirm']);
 			//->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
@@ -144,6 +143,7 @@ class Model_Auth_User {
 
 		if(!$validation->check())
 		{
+			$validation->errors('register/user');
 			throw new Validation_Exception($validation, __('Your registering information is not valid.'));
 		}
 
