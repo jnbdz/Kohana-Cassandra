@@ -142,9 +142,8 @@ class Model_Auth_User {
 		}
 
 		if(!$validation->check())
-		{
-			$validation->errors('register/user');	
-			throw new Validation_Exception($validation, __('Your registering information is not valid.'));
+		{	
+			return $validation;
 		}
 
 		// Generate a unique ID
@@ -164,6 +163,7 @@ class Model_Auth_User {
 								'role'			=> 'login',
 								'email_verified'	=> $fields['email_code'],
 							));
+		return TRUE;
 	}
 
 	/**
