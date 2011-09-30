@@ -128,7 +128,7 @@ class Model_Auth_User {
 	 */
 	public function create_user($fields)
 	{
-		$validation = Validation::factory($fields)
+		$post = Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
 			->rule('username', array($this, 'username_available'), array(':validation', ':field'))
 			->rules('email', $this->_rules['email'])
@@ -138,12 +138,12 @@ class Model_Auth_User {
 			//->labels($_labels);
 
 		if (Kohana::config('useradmin')->activation_code) {
-			$validation->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
+			$post->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
-		if(!$validation->check())
+		if(!$post->check())
 		{	
-			return $validation;
+			return $post;
 		}
 
 		// Generate a unique ID
@@ -151,9 +151,9 @@ class Model_Auth_User {
 
 		//CASSANDRA::selectColumnFamily('UsersRoles')->insert($username, array('rolename' => 'login'));
 		CASSANDRA::selectColumnFamily('Users')->insert($uuid, array(
-								'username'		=> $fields['username'],
-								'email'			=> $fields['email'],
-								'password'		=> Auth::instance()->hash($fields['password']),
+								'username'		=> $post['username'],
+								'email'			=> $post['email'],
+								'password'		=> Auth::instance()->hash($post['password']),
 								'logins'		=> 0,
 								'last_login'		=> 0,
 								'last_failed_login'	=> 0,
@@ -161,9 +161,9 @@ class Model_Auth_User {
 								'created'		=> date('YmdHis', time()),
 								'modify'		=> 0,
 								'role'			=> 'login',
-								'email_verified'	=> $fields['email_code'],
+								'email_verified'	=> $post['email_code'],
 							));
-		return TRUE;
+		return $post;
 	}
 
 	/**
