@@ -30,22 +30,22 @@ class Model_Auth_User {
 	protected $_rules = array(
 		'username' => array(
 			array('not_empty'),
-			array('min_length', array(4)),
-			array('max_length', array(32)),
+			array('min_length', array(':field', 4)),
+			array('max_length', array(':field', 32)),
 			array('regex', array('/^[-\pL\pN_.]++$/uD')),
 		),
 		'password' => array(
 			array('not_empty'),
-			array('min_length', array(8)),
-			array('max_length', array(42)),
+			array('min_length', array(':field', 8)),
+			array('max_length', array(':field', 42)),
 		),
 		'password_confirm' => array(
 			array('matches', array(':validation', ':field', 'password')),
 		),
 		'email' => array(
 			array('not_empty'),
-			array('min_length', array(4)),
-			array('max_length', array(127)),
+			array('min_length', array(':field', 4)),
+			array('max_length', array(':field', 127)),
 			array('email'),
 		),
 	);
