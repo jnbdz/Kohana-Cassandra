@@ -32,7 +32,7 @@ class Model_Auth_User {
 			array('not_empty'),
 			array('min_length', array(':field', 4)),
 			array('max_length', array(':field', 32)),
-			array('regex', array('/^[-\pL\pN_.]++$/uD')),
+			array('regex', array(':field', '/^[-\pL\pN_.]++$/uD')),
 		),
 		'password' => array(
 			array('not_empty'),
