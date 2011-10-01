@@ -1,7 +1,7 @@
 Koana-Cassandra
 ===========
 
-Cassandra support for Kohana 3.1.x
+Cassandra support for Kohana 3.2.x
 
 How to use
 ----------
@@ -62,8 +62,8 @@ Install Thrift
 Install PHPCassa
 ----------
 
-- Get PHPCassa from GitHub: https://github.com/thobbs/phpcassa
-- Put PHPCassa in the root of your website
+- mkdir vendor (in your Kohana-Cassandra)
+- In vendor dir put PHPCassa via https://github.com/thobbs/phpcassa
 
 Copyright
 ----------
