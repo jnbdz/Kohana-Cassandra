@@ -8,5 +8,5 @@ require_once $GLOBALS['THRIFT_ROOT'].'/protocol/TBinaryProtocol.php';
 require_once $GLOBALS['THRIFT_ROOT'].'/transport/TFramedTransport.php';
 require_once $GLOBALS['THRIFT_ROOT'].'/transport/TBufferedTransport.php';
 
-require_once Kohana::find_file('vendor', 'phpcassa/connection.php');
-require_once Kohana::find_file('vendor', 'phpcassa/columnfamily.php');
+require_once Kohana::find_file('vendor', 'phpcassa/connection', 'php');
+require_once Kohana::find_file('vendor', 'phpcassa/columnfamily', 'php');
