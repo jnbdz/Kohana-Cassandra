@@ -20,9 +20,6 @@ class Kohana_CASSANDRA {
 			return;
 		}
 
-         //       require_once ('phpcassa/connection.php');
-         //       require_once ('phpcassa/columnfamily.php');
-
                 $config = Kohana::config('cassandra');
 
                 $servers = $config['servers'];
