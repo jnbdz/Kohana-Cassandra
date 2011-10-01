@@ -126,7 +126,7 @@ class Model_Auth_User {
 	 * @param string $username
 	 * @return the timestamp for the operation
 	 */
-	public function create_user($fields)
+	public function create_user($fields, $optional_checks)
 	{
 		$post = Validation::factory($fields)
 			->rules('username', $this->_rules['username'])
@@ -141,7 +141,7 @@ class Model_Auth_User {
 			$post->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
-		if(!$post->check())
+		if(!$post->check() && $optional_checks)
 		{	
 			return $post;
 		}
