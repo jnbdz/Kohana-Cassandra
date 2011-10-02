@@ -137,7 +137,8 @@ class Model_Auth_User {
 			->rules('password_confirm', $this->_rules['password_confirm']);
 			//->labels($_labels);
 
-		if (Kohana::config('useradmin')->activation_code) {
+		if(Kohana::config('useradmin')->activation_code)
+		{
 			$post->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
@@ -145,7 +146,8 @@ class Model_Auth_User {
 		{	
 			return $post;
 		}
-
+echo var_dump(!$post->check());
+die('Continues for some fuck up reason!');
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
 
