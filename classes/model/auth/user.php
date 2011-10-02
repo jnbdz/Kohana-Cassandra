@@ -144,13 +144,17 @@ class Model_Auth_User {
 
 		if(!$post->check())
 		{
+			$post->valid = FALSE;
 			return $post;
 		}
 
 		if(!$optional_checks)
-		{	
+		{
+			$post->valid = FALSE;
 			return $post;
 		}
+
+		$post->valid = TRUE;
 
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
