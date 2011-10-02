@@ -142,7 +142,12 @@ class Model_Auth_User {
 			$post->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
-		if(!$post->check() || !$optional_checks)
+		if(!$post->check())
+		{
+			return $post;
+		}
+
+		if(!$optional_checks)
 		{	
 			return $post;
 		}
