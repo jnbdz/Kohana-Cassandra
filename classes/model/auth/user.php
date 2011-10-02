@@ -142,12 +142,11 @@ class Model_Auth_User {
 			$post->rule('activation_code', array($this, 'check_activation_code'), array(':validation', ':field'));
 		}
 
-		if(!$post->check() && !$optional_checks)
+		if(!$post->check() || !$optional_checks)
 		{	
 			return $post;
 		}
-echo var_dump(!$post->check());
-die('Continues for some fuck up reason!');
+
 		// Generate a unique ID
 		$uuid = CASSANDRA::Util()->uuid1();
 
