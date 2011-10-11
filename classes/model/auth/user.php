@@ -120,6 +120,39 @@ class Model_Auth_User {
 	}
 
 	/**
+	 * Get array of the information of a user.
+	 *
+	 * @param string email
+	 * @return array user info
+	 */
+	public function get_user_by_email($email)
+	{
+		CASSANDRA::selectColumnFamily('Users');
+		$user_infos = CASSANDRA::getIndexedSlices(array('email' => $email));
+		foreach($user_infos as $uuid => $cols) {
+			$cols['uuid'] = $uuid;
+			$user = $cols;
+		}
+		return $user;
+	}
+
+	/**
+	 * Change the password when reseting is called.
+	 *
+	 * @param array user info
+	 * @param string new password
+	 * @return void
+	 */
+	public function change_password($user, $password)
+	{
+		CASSANDRA::selectColumnFamily('Users')->insert($user['uuid'], array(
+							'password' => $password,
+							'failed_login_count' => 0,
+						));
+		return;
+	}
+
+	/**
 	 * Adds the Users ColumnFamily
 	 *
 	 * @param array $fields
@@ -365,6 +398,22 @@ class Model_Auth_User {
 									'activation_code_num'	=> $user['activation_code_num'] - 1,
 								));
 		}
+	}
+
+	/**
+	 * Reset token
+	 *
+	 * @param array post
+	 * @return reset_token
+	 */
+	public function reset_token($uuid, $post)
+	{
+		$reset_token = CASSANDRA::Util()->import(CASSANDRA::Util()->uuid1());
+		CASSANDRA::selectColumnFamily('Users')->insert($uuid, array(
+				'reset_token' => $reset_token,
+			), NULL, Kohana::$config->load('useradmin')->get('reset_token_max_time'));
+
+		return $reset_token;
 	}
 
 } // End Auth User Model
