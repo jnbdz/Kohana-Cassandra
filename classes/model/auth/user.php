@@ -426,4 +426,37 @@ class Model_Auth_User {
 		return $reset_token;
 	}
 
+	/**
+	 * Associate account to third party.
+	 *
+	 * @param string user_id
+	 * @param string provider name
+	 * @param string identity (user_id)
+	 * @return void
+	 */
+	public function associate_provider_to_user($user_uuid, $provider, $identity)
+	{
+		$uuid = CASSANDRA::Util()->uuid1();
+		CASSANDRA::selectColumnFamily('Users_identity')->insert($uuid, array(
+									'user_id'	=> $user_uuid,
+									'provider'	=> $provider,
+									'identity'	=> $identity,
+								));
+	}
+
+	/**
+	 * Get user identity.
+	 *
+	 * @param string provider name
+	 * @param string user id
+	 * @return array user identity info
+	 */
+	public function get_user_identity($provider_name, $user_id)
+	{
+		return CASSANDRA::selectColumnFamily('Users_identify')->get(array(
+									'provider'	=> $provider_name,
+									'identity'	=> $user_id,
+								));
+	}
+
 } // End Auth User Model
