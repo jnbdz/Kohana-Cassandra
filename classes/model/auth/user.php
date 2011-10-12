@@ -411,7 +411,7 @@ class Model_Auth_User {
 	}
 
 	/**
-	 * Reset token
+	 * Reset token.
 	 *
 	 * @param array post
 	 * @return reset_token
@@ -437,7 +437,7 @@ class Model_Auth_User {
 	public function associate_provider_to_user($user_uuid, $provider, $identity)
 	{
 		$uuid = CASSANDRA::Util()->uuid1();
-		CASSANDRA::selectColumnFamily('Users_identity')->insert($uuid, array(
+		CASSANDRA::selectColumnFamily('UsersIdentities')->insert($uuid, array(
 									'user_id'	=> $user_uuid,
 									'provider'	=> $provider,
 									'identity'	=> $identity,
@@ -453,7 +453,7 @@ class Model_Auth_User {
 	 */
 	public function get_user_identity($provider_name, $user_id)
 	{
-		return CASSANDRA::selectColumnFamily('Users_identify')->get(array(
+		return CASSANDRA::selectColumnFamily('UsersIdentities')->get(array(
 									'provider'	=> $provider_name,
 									'identity'	=> $user_id,
 								));
