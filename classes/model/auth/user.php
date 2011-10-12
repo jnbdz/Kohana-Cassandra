@@ -340,6 +340,16 @@ class Model_Auth_User {
 	}
 
 	/**
+	 * Generate UUID1 for when you need a unique key.
+	 *
+	 * @return string uuid1 imported
+	 */
+	public function generate_uuid1()
+	{
+		return CASSANDRA::Util()->import(CASSANDRA::Util()->uuid1());
+	}
+
+	/**
 	 * Generate activation code
 	 *
 	 * @param array user
