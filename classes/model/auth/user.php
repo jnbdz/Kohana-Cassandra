@@ -434,12 +434,12 @@ class Model_Auth_User {
 	 * @param string identity (user_id)
 	 * @return void
 	 */
-	public function associate_provider_to_user($user_uuid, $provider, $identity)
+	public function associate_provider_to_user($user_uuid, $provider_name, $identity)
 	{
 		$uuid = CASSANDRA::Util()->uuid1();
 		CASSANDRA::selectColumnFamily('UsersIdentities')->insert($uuid, array(
 									'user_id'	=> $user_uuid,
-									'provider'	=> $provider,
+									'provider'	=> $provider_name,
 									'identity'	=> $identity,
 								));
 	}
@@ -451,12 +451,18 @@ class Model_Auth_User {
 	 * @param string user id
 	 * @return array user identity info
 	 */
-	public function get_user_identity($provider_name, $user_id)
+	public function get_user_identity($provider_name, $identity)
 	{
-		return CASSANDRA::selectColumnFamily('UsersIdentities')->get(array(
+		$identity_info = CASSANDRA::selectColumnFamily('UsersIdentities')->get(array(
 									'provider'	=> $provider_name,
-									'identity'	=> $user_id,
+									'identity'	=> $identity,
 								));
+		foreach($identity_info as $uuid => $cols)
+		{
+			$cols['uuid'] = $uuid;
+		}
+
+		return $cols;
 	}
 
 } // End Auth User Model
