@@ -20,7 +20,7 @@ Configuration File
 - `server` config is for the pool of servers that hold your Cassandra DBs.
 - `keyspace` is the keyspace name that Kohana-Cassandra will connect to.
 
-Intall Cassandra
+Install Cassandra
 ----------
 
 - wget “cassandra”
