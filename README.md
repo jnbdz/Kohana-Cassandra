@@ -1,4 +1,4 @@
-Koana-Cassandra
+Kohana-Cassandra
 ===========
 
 Cassandra support for Kohana 3.2.x
